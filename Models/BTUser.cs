@@ -5,7 +5,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace TroubleTrails.Models
 {
-    public class BTUser : IdentityUser
+    public class BTUser : IdentityUser //btuser inherits from identityuser
     {
         [Required]
         [Display(Name = "First Name")]
