@@ -1,31 +1,29 @@
-﻿namespace TroubleTrails.Models
+﻿using System.ComponentModel;
+
+namespace TroubleTrails.Models
 {
     public class TicketComment
     {
-        //Id
         public int Id { get; set; }
 
-        //Comment
 
-        public string Comment { get; set; }
+        [DisplayName("Member Comment")]
+        public string Comment { get; set; }  // the comment itself
 
-        //Created
-
+        [DisplayName("Date")]
         public DateTimeOffset Created { get; set; } // when the comment was made
 
-        //TicketId
-
+        [DisplayName("Ticket")]
         public int TicketId { get; set; } // FK which references the ticket table   
 
-        //UserId
-
+        [DisplayName("Team Member")]
         public string UserId { get; set; } // FK which references the user table
 
         //--Navigation Properties--//
 
-        //Ticket
         public virtual Ticket Ticket { get; set; } // navigation property to the ticket table   
-        //User
+                                                    // gives us access to the properties of the ticket table
+
         public virtual BTUser User { get; set; } // navigation property to the user table   
 
 
