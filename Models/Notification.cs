@@ -5,7 +5,7 @@ namespace TroubleTrails.Models
 {
     public class Notification
     {
-        int Id { get; set; }    // PK
+        public int Id { get; set; }    // PK
 
         [DisplayName("Ticket")]
         public int TicketId { get; set; } // FK which references the ticket table
