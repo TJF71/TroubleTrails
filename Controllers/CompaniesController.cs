@@ -16,7 +16,7 @@ namespace TroubleTrails.Controllers
 
         public CompaniesController(ApplicationDbContext context)  // constructor  for the controller that takes in the dbcontext
         {
-            _context = context;
+            _context = context; // set the dbcontext to the private field
         }
 
         // GET: Companies
