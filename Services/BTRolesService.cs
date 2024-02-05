@@ -21,9 +21,10 @@ namespace TroubleTrails.Services
             _userManager = userManager; // set the user manager to the private field
         }
 
-        public Task<bool> AddUserToRoleAsync(BTUser user, string roleName)
+        async public Task<bool> AddUserToRoleAsync(BTUser user, string roleName)
         {
-            throw new NotImplementedException();
+           bool result = (await _userManager.AddToRoleAsync(user, roleName)).Succeeded; // add the user to the role and store the result
+            return result; 
         }
 
         public Task<string> GetRoleNameByIdAsync(string roleId)
