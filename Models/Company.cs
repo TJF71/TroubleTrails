@@ -18,7 +18,8 @@ namespace TroubleTrails.Models
 
         public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>(); // navigation property to the project table lazy loading
 
-
+        // create relationship to Invites
+        public virtual ICollection<Invite> Invites { get; set; } = new HashSet<Invite>(); // navigation property to the invite table lazy loading
 
 
 

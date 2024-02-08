@@ -10,7 +10,7 @@ namespace TroubleTrails.Services
         private readonly ApplicationDbContext _context;
         public BTCompanyInfoService(ApplicationDbContext context) 
         {
-            _context = context;
+            _context = context;  // set the dbcontext to the private field
         
         }
         public async Task<List<BTUser>> GetAllMemebersAsync(int companyId)
@@ -30,7 +30,17 @@ namespace TroubleTrails.Services
                                             // eager loading
                                             .Include(p => p.Members)  
                                             .Include(p => p.Tickets)  
-                                                .ThenInclude(t => t.Comments)  
+                                                .ThenInclude(t => t.Comments)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.Attachments)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.History)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.Notifications)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.DeveloperUser)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.OwnerUser)
                                             .Include(p => p.Tickets)
                                                 .ThenInclude(t => t.TicketStatus)  
                                             .Include(p => p.Tickets)
@@ -44,9 +54,12 @@ namespace TroubleTrails.Services
 
         public async Task<List<Ticket>> GetAllTicketsAsync(int companyId)
         {
-           List<Ticket> result = new(); // constructor for a new list of Ticket
+            List<Ticket> result = new(); // constructor for a new list of Ticket
+            List<Project> projects = new(); 
 
-            result = await _context.Tickets.Where(t => t.ProjectId == companyId).ToListAsync();
+            projects = await GetAllProjectsAsync(companyId); // get all the projects for the company
+
+            result = projects.SelectMany(p => p.Tickets).ToList(); // select all the tickets from all the projects and convert to list 
 
             return result;  
         }
@@ -55,9 +68,20 @@ namespace TroubleTrails.Services
         {
             Company result = new(); // constructor for a new Company
 
-            result = await _context.Companies.FindAsync(companyId);
+        if (companyId != null) // if the company id is null
+            {
+                result = await _context.Companies
+                                        .Include(c =>c.Members)  
+                                        .Include(c => c.Projects)  
+                                        .Include(c => c.Invites)
+                                        .FirstOrDefaultAsync(c => c.Id == companyId); // get the company by its id
+                  
+            
+            }
+        return result;
 
-            return result;
+
+
             
         }
     }
