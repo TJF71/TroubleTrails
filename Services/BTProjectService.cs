@@ -1,13 +1,23 @@
-﻿using TroubleTrails.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using TroubleTrails.Data;
+using TroubleTrails.Models;
 using TroubleTrails.Services.Interfaces;
 
 namespace TroubleTrails.Services
 {
     public class BTProjectService : IBTProjectService
     {
-        public Task AddNewProjectAsync(Project project)
+        private readonly ApplicationDbContext _context;
+
+        public BTProjectService(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+
+        public async Task AddNewProjectAsync(Project project)
+        {
+            _context.Add(project);
+            await _context.SaveChangesAsync();
         }
 
         public Task<bool> AddProjectManagerAsync(string userId, int projectId)
@@ -20,9 +30,11 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task ArchiveProjectAsync(Project project)
+        public async Task ArchiveProjectAsync(Project project)
         {
-            throw new NotImplementedException();
+            project.Archived = true; // set the project to archived
+            _context.Update(project);
+            await _context.SaveChangesAsync();
         }
 
         public Task<List<BTUser>> GetAllProjectMembersExceptPMAsync(int projectId)
@@ -50,9 +62,15 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task<Project> GetProjectByIdAsync(int projectId, int companyId)
+        public async Task<Project> GetProjectByIdAsync(int projectId, int companyId)
         {
-            throw new NotImplementedException();
+            Project project = await _context.Projects
+                                            .Include(p => p.Tickets) 
+                                            .Include(p => p.Members)
+                                            .Include(p => p.ProjectPriority)
+                                            .FirstOrDefaultAsync(p => p.Id == projectId && p.CompanyId == companyId); // get the project by id and company id  
+            return project;
+        
         }
 
         public Task<BTUser> GetProjectManagerAsync(int projectId)
@@ -105,9 +123,10 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task UpdateProjectAsync(Project project)
+        public async Task UpdateProjectAsync(Project project)
         {
-            throw new NotImplementedException();
+            _context.Update(project);
+            await _context.SaveChangesAsync();
         }
     }
 }
