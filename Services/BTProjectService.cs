@@ -48,7 +48,7 @@ namespace TroubleTrails.Services
         {
             List<Project> projects = new();
             
-            projects = await _context.Projects.Where(p => p.CompanyId == companyId)
+            projects = await _context.Projects.Where(p => p.CompanyId == companyId  && p.Archived == false)
                                             // eager loading
                                             .Include(p => p.Members)
                                             .Include(p => p.Tickets)
@@ -134,9 +134,18 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsUserOnProject(string userId, int projectId)
+        public async Task<bool> IsUserOnProjectAsync(string userId, int projectId)
         {
-            throw new NotImplementedException();
+            Project project = await _context.Projects.Include(p => p.Members).FirstOrDefaultAsync(p => p.Id == projectId); // get the project by id
+
+            bool result = false;
+
+            if(project != null)
+            {
+                result = project.Members.Any(m => m.Id == userId); // check if the user is on the project
+            }
+
+            return result;
         }
 
         public async Task<int> LookupProjectPriorityId(string priorityName)
