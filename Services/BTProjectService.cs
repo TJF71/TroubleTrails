@@ -14,6 +14,7 @@ namespace TroubleTrails.Services
             _context = context;
         }
 
+        // CRUD - Create 
         public async Task AddNewProjectAsync(Project project)
         {
             _context.Add(project);
@@ -30,6 +31,7 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
+        // CRUD = Archive (Delete)
         public async Task ArchiveProjectAsync(Project project)
         {
             project.Archived = true; // set the project to archived
@@ -42,19 +44,52 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Project>> GetAllProjectsByCompany(int companyId)
+        public async Task<List<Project>> GetAllProjectsByCompany(int companyId)
         {
-            throw new NotImplementedException();
+            List<Project> projects = new();
+            
+            projects = await _context.Projects.Where(p => p.CompanyId == companyId)
+                                            // eager loading
+                                            .Include(p => p.Members)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.Comments)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.Attachments)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.History)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.Notifications)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.DeveloperUser)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.OwnerUser)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.TicketStatus)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.TicketPriority)
+                                            .Include(p => p.Tickets)
+                                                .ThenInclude(t => t.TicketType)
+                                            .Include(p => p.ProjectPriority)
+                                            .ToListAsync();
+            return projects;
+
         }
 
-        public Task<List<Project>> GetAllProjectsByPriority(int companyId, string priorityName)
+        public async Task<List<Project>> GetAllProjectsByPriority(int companyId, string priorityName)
         {
-            throw new NotImplementedException();
+            List<Project> projects = await GetAllProjectsByCompany(companyId); // get all the projects by company id
+            int priorityId = await LookupProjectPriorityId(priorityName); // get the priority id by the priority name
+
+            return projects.Where(p => p.ProjectPriorityId == priorityId).ToList(); // return the projects where the project priority id is equal to the priority id
+
+
         }
 
-        public Task<List<Project>> GetArchivedProjectsByCompany(int companyId)
+        public async Task<List<Project>> GetArchivedProjectsByCompany(int companyId)
         {
-            throw new NotImplementedException();
+            List<Project> projects = await GetAllProjectsByCompany(companyId);  // get all the projects by company id
+
+            return projects.Where(p => p.Archived == true).ToList(); // return the projects where the archived is true 
         }
 
         public Task<List<BTUser>> GetDevelopersOnProjectAsync(int projectId)
@@ -62,6 +97,7 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
+        // CRUD - Read
         public async Task<Project> GetProjectByIdAsync(int projectId, int companyId)
         {
             Project project = await _context.Projects
@@ -103,9 +139,10 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task<int> LookupProjectPriorityId(string priorityName)
+        public async Task<int> LookupProjectPriorityId(string priorityName)
         {
-            throw new NotImplementedException();
+            int priorityId = (await _context.ProjectPriorities.FirstOrDefaultAsync(p => p.Name == priorityName)).Id; // get the priority id by the priority name
+            return priorityId;
         }
 
         public Task RemoveProjectManagerAsync(int projectId)
@@ -122,7 +159,7 @@ namespace TroubleTrails.Services
         {
             throw new NotImplementedException();
         }
-
+        // CRUD - Update
         public async Task UpdateProjectAsync(Project project)
         {
             _context.Update(project);
