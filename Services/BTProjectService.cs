@@ -280,10 +280,10 @@ namespace TroubleTrails.Services
         {
             try
             {
-                List<BTUser> memmbers = await GetProjectMembersByRoleAsync(projectId, role);
+                List<BTUser> members = await GetProjectMembersByRoleAsync(projectId, role);
                 Project? project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
 
-                foreach (BTUser btUser in memmbers)
+                foreach (BTUser btUser in members)
                 {
                     try
                     {
