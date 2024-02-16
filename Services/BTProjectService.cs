@@ -8,10 +8,12 @@ namespace TroubleTrails.Services
     public class BTProjectService : IBTProjectService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IBTRoleService _rolesService;  // underscore is a naming convention for private fields
 
-        public BTProjectService(ApplicationDbContext context)
+        public BTProjectService(ApplicationDbContext context, IBTRoleService rolesService)
         {
             _context = context;
+            _rolesService = rolesService;
         }
 
         // CRUD - Create 
@@ -142,9 +144,24 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<BTUser>> GetProjectMembersByRoleAsync(int projectId, string role)
+        public async Task<List<BTUser>> GetProjectMembersByRoleAsync(int projectId, string role)
         {
-            throw new NotImplementedException();
+            Project? project = await _context.Projects
+                                            .Include(p => p.Members)
+                                            .FirstOrDefaultAsync(p => p.Id == projectId); // get the project by id
+
+            List<BTUser> members = new(); // create a new list of members
+
+            foreach (var user in project.Members)
+            {
+                if(await _rolesService.IsUserInRoleAsync(user, role))
+                {
+                    members.Add(user); // add the user to the list of members
+                }
+            }
+
+            return members;
+
         }
 
         public Task<List<BTUser>> GetSubmittersOnProjectAsync(int projectId)
@@ -249,10 +266,36 @@ namespace TroubleTrails.Services
 
         }
 
-        public Task RemoveUsersFromProjectByRoleAsync(string role, int projectId)
+        public async Task RemoveUsersFromProjectByRoleAsync(string role, int projectId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<BTUser> memmbers = await GetProjectMembersByRoleAsync(projectId, role);
+                Project? project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+
+                foreach (BTUser btUser in memmbers)
+                {
+                    try
+                    {
+                        project.Members.Remove(btUser);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception)
+                    {
+                        throw; // throw the exception onto the stack
+                    }
+                }
+
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine($"**** ERROR **** - Error Removing User from project.  --> {ex.Message}");
+                throw;
+            }
+
+
         }
+        
         // CRUD - Update
         public async Task UpdateProjectAsync(Project project)
         {
