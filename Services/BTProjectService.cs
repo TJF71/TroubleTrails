@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TroubleTrails.Data;
 using TroubleTrails.Models;
+using TroubleTrails.Models.Enums;
 using TroubleTrails.Services.Interfaces;
 
 namespace TroubleTrails.Services
@@ -69,9 +70,15 @@ namespace TroubleTrails.Services
             await _context.SaveChangesAsync();
         }
 
-        public Task<List<BTUser>> GetAllProjectMembersExceptPMAsync(int projectId)
+        public async Task<List<BTUser>> GetAllProjectMembersExceptPMAsync(int projectId)
         {
-            throw new NotImplementedException();
+            List<BTUser> developers = await GetProjectMembersByRoleAsync(projectId, Roles.Developer.ToString());
+            List<BTUser> submitters = await GetProjectMembersByRoleAsync(projectId, Roles.Submitter.ToString());
+            List<BTUser> admins = await GetProjectMembersByRoleAsync(projectId, Roles.Admin.ToString());
+
+            List<BTUser> teamMembers = developers.Concat(submitters).Concat(admins).ToList();
+
+            return teamMembers;
         }
 
         public async Task<List<Project>> GetAllProjectsByCompany(int companyId)
@@ -209,9 +216,12 @@ namespace TroubleTrails.Services
         }
 
 
-        public Task<List<BTUser>> GetUsersNotOnProjectAsync(int projectId, int companyId)
+        public async Task<List<BTUser>> GetUsersNotOnProjectAsync(int projectId, int companyId)
         {
-            throw new NotImplementedException();
+            List<BTUser> users = await _context.Users.Where(u => u.Projects.All(p => p.Id != projectId)).ToListAsync();  // get the users where the project id is not equal to the project id
+
+            return users.Where(u => u.CompanyID == companyId).ToList(); // return the users where the company id is equal to the company id
+        
         }
 
         public async Task<bool> IsUserOnProjectAsync(string userId, int projectId)
