@@ -18,7 +18,7 @@ namespace TroubleTrails.Services
         public async Task AddNewProjectAsync(Project project)
         {
             _context.Add(project);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // save the changes to the database
         }
 
         public Task<bool> AddProjectManagerAsync(string userId, int projectId)
@@ -26,9 +26,37 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> AddUserToProjectAsync(string userId, int projectId)
+        public async Task<bool> AddUserToProjectAsync(string userId, int projectId)
         {
-            throw new NotImplementedException();
+            BTUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId); // get the user by id
+
+            if (user != null)
+            {
+                Project project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId); // get the project by id
+                if (!await IsUserOnProjectAsync(userId, projectId)) // check if the user is not on the project
+                {
+                    try
+                    {
+                        project.Members.Add(user); // add the user to the project
+                        await _context.SaveChangesAsync(); // save the changes to the database
+                        return true; // return true if the user is added to the project
+                    } 
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+
+                }
+
+            }
+            else
+            {
+                return false; // return false if the user is not found  
+            }
+            {
+                    return false; // return false for any other reason
+            }
+
         }
 
         // CRUD = Archive (Delete)
@@ -47,8 +75,8 @@ namespace TroubleTrails.Services
         public async Task<List<Project>> GetAllProjectsByCompany(int companyId)
         {
             List<Project> projects = new();
-            
-            projects = await _context.Projects.Where(p => p.CompanyId == companyId  && p.Archived == false)
+
+            projects = await _context.Projects.Where(p => p.CompanyId == companyId && p.Archived == false)
                                             // eager loading
                                             .Include(p => p.Members)
                                             .Include(p => p.Tickets)
@@ -101,12 +129,12 @@ namespace TroubleTrails.Services
         public async Task<Project> GetProjectByIdAsync(int projectId, int companyId)
         {
             Project project = await _context.Projects
-                                            .Include(p => p.Tickets) 
+                                            .Include(p => p.Tickets)
                                             .Include(p => p.Members)
                                             .Include(p => p.ProjectPriority)
                                             .FirstOrDefaultAsync(p => p.Id == projectId && p.CompanyId == companyId); // get the project by id and company id  
             return project;
-        
+
         }
 
         public Task<BTUser> GetProjectManagerAsync(int projectId)
@@ -124,10 +152,45 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Project>> GetUserProjectsAsync(string userId)
+
+        public async Task<List<Project>> GetUserProjectsAsync(string userId)
         {
-            throw new NotImplementedException();
+            try
+            {
+               List<Project> userProjects = (await _context.Users
+                    .Include(u => u.Projects)
+                        .ThenInclude(p => p.Company)
+                    .Include(u => u.Projects)
+                        .ThenInclude(p => p.Members)
+                    .Include(u => u.Projects)
+                        .ThenInclude(p => p.Tickets)
+                    .Include(u => u.Projects)
+                        .ThenInclude(t => t.Tickets)
+                            .ThenInclude(t => t.DeveloperUser)
+                    .Include(u => u.Projects)
+                        .ThenInclude(t => t.Tickets)
+                            .ThenInclude(t => t.OwnerUser)
+                     .Include(u => u.Projects)
+                         .ThenInclude(t => t.Tickets)
+                            .ThenInclude(t => t.TicketPriority)
+                     .Include(u => u.Projects)
+                         .ThenInclude(t => t.Tickets)
+                             .ThenInclude(t => t.TicketStatus)
+                    .Include(u => u.Projects)
+                            .ThenInclude(t => t.Tickets)
+                                .ThenInclude(t => t.TicketType)
+                    .FirstOrDefaultAsync(u => u.Id == userId)).Projects.ToList();
+
+                return userProjects;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"**** ERROR **** - Error Removing User project list.  --> {ex.Message}");
+                throw;
+            }
+
         }
+
 
         public Task<List<BTUser>> GetUsersNotOnProjectAsync(int projectId, int companyId)
         {
@@ -140,7 +203,7 @@ namespace TroubleTrails.Services
 
             bool result = false;
 
-            if(project != null)
+            if (project != null)
             {
                 result = project.Members.Any(m => m.Id == userId); // check if the user is on the project
             }
@@ -159,9 +222,31 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
-        public Task RemoveUserFromProjectAsync(string userId, int projectId)
+        public async Task RemoveUserFromProjectAsync(string userId, int projectId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BTUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId); // get the user by id
+                Project project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId); // get the project by id
+
+                try
+                {
+                    if (await IsUserOnProjectAsync(userId, projectId))
+                    {
+                        project.Members.Remove(user); //  
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception)
+                {
+                    throw; // deep dive into the exception from database
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"**** ERROR **** - Error Removing User from project.  --> {ex.Message}");
+            }
+
         }
 
         public Task RemoveUsersFromProjectByRoleAsync(string role, int projectId)
