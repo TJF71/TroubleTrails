@@ -260,7 +260,7 @@ namespace TroubleTrails.Services
                 {
                     if (await IsUserOnProjectAsync(userId, projectId))
                     {
-                        project.Members.Remove(user); //  
+                        project.Members.Remove(user);      // remove the user from the project
                         await _context.SaveChangesAsync();
                     }
                 }
