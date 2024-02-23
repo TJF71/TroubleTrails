@@ -146,9 +146,21 @@ namespace TroubleTrails.Services
 
         }
 
-        public Task<BTUser> GetProjectManagerAsync(int projectId)
+        public async Task<BTUser> GetProjectManagerAsync(int projectId)
         {
-            throw new NotImplementedException();
+            Project? project = await _context.Projects
+                                             .Include(p => p.Members).FirstOrDefaultAsync(p => p.Id == projectId); // get the project by id
+            
+            foreach (BTUser member in project?.Members)  // loop through the members of the project  ? is a null conditional operator
+            {
+                if (await _rolesService.IsUserInRoleAsync(member, Roles.ProjectManager.ToString())) // check if the user is in the role of project manager
+                {
+                    return member; // return the member
+                }
+            }
+
+            return null; // return null if the member is not found
+
         }
 
         public async Task<List<BTUser>> GetProjectMembersByRoleAsync(int projectId, string role)
