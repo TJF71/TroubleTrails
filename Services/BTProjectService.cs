@@ -24,9 +24,34 @@ namespace TroubleTrails.Services
             await _context.SaveChangesAsync(); // save the changes to the database
         }
 
-        public Task<bool> AddProjectManagerAsync(string userId, int projectId)
+        public async Task<bool> AddProjectManagerAsync(string userId, int projectId)
         {
-            throw new NotImplementedException();
+            BTUser currentPM = await GetProjectManagerAsync(projectId);   
+            
+            // Remove the current project manager if necessary
+            if (currentPM != null)
+            {
+                try
+                { 
+                    await RemoveProjectManagerAsync(projectId);                   
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"**** ERROR **** - Error Removing New Project Manager.  --> {ex.Message}");
+                    return false;
+                }
+            }
+
+            try
+            {
+                await AddProjectManagerAsync(userId, projectId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"**** ERROR **** - Error Adding Project Manager.  --> {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<bool> AddUserToProjectAsync(string userId, int projectId)
@@ -256,9 +281,26 @@ namespace TroubleTrails.Services
             return priorityId;
         }
 
-        public Task RemoveProjectManagerAsync(int projectId)
+        public async Task RemoveProjectManagerAsync(int projectId)
         {
-            throw new NotImplementedException();
+            Project? project = await _context.Projects
+                                            .Include(p => p.Members)
+                                            .FirstOrDefaultAsync(p => p.Id == projectId); // get the project by id
+            try
+            {
+                foreach (BTUser member in project?.Members)
+                {
+                    if(await _rolesService.IsUserInRoleAsync(member, Roles.ProjectManager.ToString()))
+                    {
+                        await RemoveUserFromProjectAsync(member.Id, projectId);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
         public async Task RemoveUserFromProjectAsync(string userId, int projectId)
