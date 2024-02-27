@@ -58,9 +58,32 @@ namespace TroubleTrails.Services
             }
         }
 
-        public Task<List<Ticket>> GetAllTicketsByPriorityAsync(int companyId, string priorityName)
+        public async Task<List<Ticket>> GetAllTicketsByPriorityAsync(int companyId, string priorityName)
         {
-            throw new NotImplementedException();
+            int priorityId = (await LookupTicketPriorityIdAsync(priorityName)).Value; // Value creates an integer
+
+            try
+            {
+                List<Ticket> tickets = await _context.Projects
+                                                      .Where(p => p.CompanyId == companyId)
+                                                      .SelectMany(p => p.Tickets) //  gets a collectoin of a collection
+                                                        .Include(t => t.Attachments)
+                                                        .Include(t => t.Comments)
+                                                        .Include(t => t.DeveloperUser)
+                                                        .Include(t => t.OwnerUser)
+                                                        .Include(t => t.TicketPriority)
+                                                        .Include(t => t.TicketStatus)
+                                                        .Include(t => t.TicketType)
+                                                        .Include(t => t.Project)
+                                                    .Where(t => t.TicketPriorityId == priorityId)
+                                                    .ToListAsync();
+                return tickets;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public Task<List<Ticket>> GetAllTicketsByStatusAsync(int companyId, string statusName)
@@ -72,6 +95,10 @@ namespace TroubleTrails.Services
         {
             throw new NotImplementedException();
         }
+
+
+
+
 
         public Task<List<Ticket>> GetArchivedTicketsAsync(int companyId)
         {
