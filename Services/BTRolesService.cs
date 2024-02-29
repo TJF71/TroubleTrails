@@ -6,7 +6,7 @@ using TroubleTrails.Services.Interfaces;
 
 namespace TroubleTrails.Services
 {
-    public class BTRolesService : IBTRoleService // implement the interface
+    public class BTRolesService : IBTRolesService // implement the interface
     {
         private readonly ApplicationDbContext _context; // create a private field for the dbcontext
         private readonly RoleManager<IdentityRole> _roleManager; // create a private field for the role manager

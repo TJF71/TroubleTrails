@@ -2,7 +2,7 @@
 
 namespace TroubleTrails.Services.Interfaces
 {
-    public interface IBTRoleService
+    public interface IBTRolesService
     {
         public Task<bool> IsUserInRoleAsync(BTUser user, string roleName); // first method to check if a user is in a role
 

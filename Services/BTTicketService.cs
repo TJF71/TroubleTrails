@@ -9,9 +9,17 @@ namespace TroubleTrails.Services
     public class BTTicketService : IBTTicketService
     {
         private readonly ApplicationDbContext _context;
-        public BTTicketService(ApplicationDbContext context)
+        private readonly IBTRolesService _rolesService;
+        private readonly IBTProjectService _projectService;
+
+        public BTTicketService(ApplicationDbContext context,
+                                IBTRolesService rolesService,
+                                IBTProjectService projectService)
         {
-            _context = context;           
+            _context = context;
+            _rolesService = rolesService;
+            _projectService = projectService;
+            
         }
 
         public async Task AddNewTicketAsync(Ticket ticket)
@@ -214,9 +222,35 @@ namespace TroubleTrails.Services
             }
         }
 
-        public Task<List<Ticket>> GetTicketsByUserIdAsync(string userId, int companyId)
+        public async Task<List<Ticket>> GetTicketsByUserIdAsync(string userId, int companyId)
         {
-            throw new NotImplementedException();
+            BTUser btUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);\
+            List<Ticket> tickets = new();
+
+            try
+            {
+                if (await _rolesService.IsUserInRoleAsync(btUser, Roles.Admin.ToString()))
+                {
+                    tickets = (await _projectService.GetAllProjectsByCompany(companyId)).SelectMany(p => p.Tickets).ToList();
+                }
+                else if ()
+                { 
+                
+                }
+                else if ()
+                {
+
+                }
+                else if ()
+                {
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<int?> LookupTicketPriorityIdAsync(string priorityName)
