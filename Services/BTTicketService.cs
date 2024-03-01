@@ -155,9 +155,18 @@ namespace TroubleTrails.Services
 
 
 
-        public Task<List<Ticket>> GetArchivedTicketsAsync(int companyId)
+        public async Task<List<Ticket>> GetArchivedTicketsAsync(int companyId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Ticket> tickets = (await GetAllTicketsByCompanyAsync(companyId)).Where(t => t.Archived == true).ToList();
+                return tickets;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public Task<List<Ticket>> GetProjectTicketsByPriorityAsync(string priorityName, int companyId, int projectId)
@@ -233,18 +242,24 @@ namespace TroubleTrails.Services
                 {
                     tickets = (await _projectService.GetAllProjectsByCompany(companyId)).SelectMany(p => p.Tickets).ToList();
                 }
-                else if ()
+                else if (await _rolesService.IsUserInRoleAsync(btUser, Roles.Developer.ToString()))
                 { 
-                
+                    tickets = (await _projectService.GetAllProjectsByCompany(companyId))
+                                                    .SelectMany(p => p.Tickets).Where(t => t.DeveloperUserId == userId)
+                                                    .ToList();
                 }
-                else if ()
+                else if (await _rolesService.IsUserInRoleAsync(btUser, Roles.Submitter.ToString()))
                 {
-
+                    tickets = (await _projectService.GetAllProjectsByCompany(companyId))
+                                .SelectMany(p => p.Tickets).Where(t => t.OwnerUserId == userId)
+                                .ToList();
                 }
-                else if ()
+                else if (await _rolesService.IsUserInRoleAsync(btUser, Roles.ProjectManager.ToString()))
                 {
-
+                    tickets = (await _projectService.GetUserProjectsAsync(userId)).SelectMany(t => t.Tickets).ToList();
                 }
+
+                return tickets;
             }
             catch (Exception)
             {
