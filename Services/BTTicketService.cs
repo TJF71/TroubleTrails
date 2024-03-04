@@ -194,9 +194,26 @@ namespace TroubleTrails.Services
             return await _context.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
         }
 
-        public Task<BTUser> GetTicketDeveloperAsync(int ticketId)
+        public async Task<BTUser> GetTicketDeveloperAsync(int ticketId, int companyId)  // getting the various aspects of the user
         {
-            throw new NotImplementedException();
+            BTUser developer = new();
+
+            try
+            {
+                Ticket ticket = (await GetAllTicketsByCompanyAsync(companyId)).FirstOrDefault(t => t.Id == ticketId);  // no need to use FirstOrDefaultAsync as the list is already part of the application after using GetAllTicketByCompanyAsync
+                
+                if(ticket?.DeveloperUserId != null)
+                {
+                    developer = ticket.DeveloperUser;
+                }
+
+                return developer;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<List<Ticket>> GetTicketsByRoleAsync(string role, string userId, int companyId)
@@ -233,7 +250,7 @@ namespace TroubleTrails.Services
 
         public async Task<List<Ticket>> GetTicketsByUserIdAsync(string userId, int companyId)
         {
-            BTUser btUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);\
+            BTUser btUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             List<Ticket> tickets = new();
 
             try
