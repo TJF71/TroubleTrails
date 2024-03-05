@@ -42,6 +42,7 @@ namespace TroubleTrails.Services
             }
             else
             {
+                //Check Ticket Title
                 if (oldTicket.Title != newTicket.Title)
                 {
 
@@ -59,7 +60,7 @@ namespace TroubleTrails.Services
                     await _context.TicketHistories.AddAsync(history);
                 }
     
-                // Check Ticket History
+                // Check Ticket Description
                 if(oldTicket.Description != newTicket.Description)  // if not equal then it was modified
                 {
 
@@ -126,10 +127,34 @@ namespace TroubleTrails.Services
                     await _context.TicketHistories.AddAsync(history);
                 }
 
+                //Check Ticket Developer
+                if (oldTicket.DeveloperUserId != newTicket.DeveloperUserId)
+                {
+                    TicketHistory history = new()
+                    {
+                        TicketId = newTicket.Id,
+                        Property = "Developer",
+                        OldValue = oldTicket.DeveloperUser?.FullName ?? "Not Assigned",  // if null then assign "not assigned"
+                        NewValue = newTicket.DeveloperUser?.FullName,
+                        Created = DateTimeOffset.Now,
+                        UserId = userId,
+                        Description = $"New ticket developer: {newTicket.DeveloperUser.FullName}"
+                    };
+                    await _context.TicketHistories.AddAsync(history);
+                }
+
+                try
+                {
+                    //Save the TicketHistory Database set to the database
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
             }
-
-
-
         }
 
 
