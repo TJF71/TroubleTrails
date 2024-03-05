@@ -9,9 +9,9 @@ namespace TroubleTrails.Services
     public class BTProjectService : IBTProjectService
     {
         private readonly ApplicationDbContext _context;
-        private readonly IBTRoleService _rolesService;  // underscore is a naming convention for private fields
+        private readonly IBTRolesService _rolesService;  // underscore is a naming convention for private fields
 
-        public BTProjectService(ApplicationDbContext context, IBTRoleService rolesService)
+        public BTProjectService(ApplicationDbContext context, IBTRolesService rolesService)
         {
             _context = context;
             _rolesService = rolesService;
