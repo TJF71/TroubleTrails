@@ -24,15 +24,34 @@ namespace TroubleTrails.Services
 
         public async Task AddNewTicketAsync(Ticket ticket)
         {
-            ticket.Archived = true; // This is a temporary solution to allow the ticket to be created
-            _context.Add(ticket);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Add(ticket);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
         }
 
         public async Task ArchiveTicketAsync(Ticket ticket)
         {
-            _context.Update(ticket);
-            await _context.SaveChangesAsync();
+            try
+            {
+                ticket.Archived = true;
+                _context.Update(ticket);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         public async Task AssignTicketAsync(int ticketId, string userId)  // no return necessary
@@ -265,7 +284,16 @@ namespace TroubleTrails.Services
 
         public async Task<Ticket> GetTicketByIdAsync(int ticketId)
         {
-            return await _context.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+            try
+            {
+                return await _context.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         public async Task<BTUser> GetTicketDeveloperAsync(int ticketId, int companyId)  // getting the various aspects of the user
@@ -400,8 +428,17 @@ namespace TroubleTrails.Services
 
         public async Task UpdateTicketAsync(Ticket ticket)
         {
-            _context.Update(ticket);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Update(ticket);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
     }
 }
