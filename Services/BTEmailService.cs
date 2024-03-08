@@ -3,7 +3,6 @@ using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System.Net.Mail;
 using TroubleTrails.Models;
 
 namespace TroubleTrails.Services
@@ -39,7 +38,9 @@ namespace TroubleTrails.Services
                 smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
                 smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
 
-                await smtp.SendAsync(true);
+                await smtp.SendAsync(email);
+
+                smtp.Disconnect(true);
            
             }
             catch (Exception)
