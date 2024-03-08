@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 using TroubleTrails.Data;
 using TroubleTrails.Models;
 using TroubleTrails.Services;
@@ -25,6 +27,10 @@ builder.Services.AddScoped<IBTCompanyInfoService, BTCompanyInfoService>(); // me
 builder.Services.AddScoped<IBTProjectService, BTProjectService>(); // method to add the project service
 builder.Services.AddScoped<IBTTicketService, BTTicketService>(); // method to add ticket service
 builder.Services.AddScoped<IBTTicketHistoryService, BTTicketHistoryService>();
+
+// Custom Email Services
+builder.Services.AddScoped<IEmailSender, BTEmailService>();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.AddControllersWithViews();
 
