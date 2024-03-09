@@ -77,14 +77,52 @@ namespace TroubleTrails.Services
             }
         }
 
-        public Task SendEmailNotificationAsync(Notification notification, string emailSubject)
+        public async Task<bool> SendEmailNotificationAsync(Notification notification, string emailSubject)
         {
-            throw new NotImplementedException();
+            BTUser? bTUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == notification.RecipientId);
+            
+            if(bTUser != null)
+            {
+                string btUserEmail = bTUser.Email;
+                string message = notification.Message;
+
+                //Send Email
+                try
+                {
+                    await _emailSender.SendEmailAsync(btUserEmail, emailSubject, message);
+                    return true;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public Task SendEmailNotificationsByRoleAsync(Notification notification, int companyId, string role)
+        public async Task SendEmailNotificationsByRoleAsync(Notification notification, int companyId, string role)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<BTUser> members = await _rolesService.GetUsersInRoleAsync(role, companyId);
+
+                foreach(BTUser bTUser in members)
+                {
+                    notification.RecipientId = bTUser.Id;
+                    await SendEmailNotificationAsync(notification, notification.Title);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+     
         }
 
         public Task SendMembersEmailNotificationsAsync(Notification notification, List<BTUser> members)
