@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using TroubleTrails.Data;
 using TroubleTrails.Models;
 using TroubleTrails.Services.Interfaces;
@@ -20,32 +21,73 @@ namespace TroubleTrails.Services
             _rolesService = rolesService;
         }
 
-        Task IBTNotificationService.AddNotificationAsync(Notification notification)
+        public async Task AddNotificationAsync(Notification notification)
+        {
+            try
+            {
+                await _context.AddAsync(notification);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<List<Notification>> GetRecievedNotificationsAsync(string userId)
+        {
+            try
+            {
+                List<Notification> notifications = await _context.Notifications
+                                                                 .Include(n => n.Recipient)
+                                                                 .Include(n => n.Sender)
+                                                                 .Include(n => n.Ticket)
+                                                                    .ThenInclude(t => t.Project)
+                                                                 .Where(n => n.RecipientId == userId).ToListAsync();
+                return notifications;
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<List<Notification>> GetSentNotificationsAsync(string userId)
+        {
+            try
+            {
+                List<Notification> notifications = await _context.Notifications
+                                                                 .Include(n => n.Recipient)
+                                                                 .Include(n => n.Sender)
+                                                                 .Include(n => n.Ticket)
+                                                                    .ThenInclude(t => t.Project)
+                                                                 .Where(n => n.SenderId == userId).ToListAsync();
+                return notifications;
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public Task SendEmailNotificationAsync(Notification notification, string emailSubject)
         {
             throw new NotImplementedException();
         }
 
-        Task<List<Notification>> IBTNotificationService.GetRecievedNotificationsAsync(string userId)
+        public Task SendEmailNotificationsByRoleAsync(Notification notification, int companyId, string role)
         {
             throw new NotImplementedException();
         }
 
-        Task<List<Notification>> IBTNotificationService.GetSentNotificationsAsync(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IBTNotificationService.SendEmailNotificationAsync(Notification notification, string emailSubject)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IBTNotificationService.SendEmailNotificationsByRoleAsync(Notification notification, int companyId, string role)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IBTNotificationService.SendMembersEmailNotificationsAsync(Notification notification, List<BTUser> members)
+        public Task SendMembersEmailNotificationsAsync(Notification notification, List<BTUser> members)
         {
             throw new NotImplementedException();
         }
