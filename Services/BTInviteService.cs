@@ -42,12 +42,21 @@ namespace TroubleTrails.Services
 
         public async Task AddNewInviteAsync(Invite invite)
         {
+            try
+            {
+                await _context.Invites.AddAsync(invite);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
         }
 
         public Task<bool> AnyInviteAsync(Guid token, string email, int companyId)
         {
-            throw new NotImplementedException();
+
         }
 
         public Task<Invite> GetInviteAsync(int inviteId, int companyId)
