@@ -29,6 +29,8 @@ builder.Services.AddScoped<IBTTicketService, BTTicketService>(); // method to ad
 builder.Services.AddScoped<IBTTicketHistoryService, BTTicketHistoryService>();
 builder.Services.AddScoped<IBTNotificationService, BTNotificationService>();
 
+//builder.Services.AddScoped<IBTInviteService, BTInviteService>();
+
 // Custom Email Services
 builder.Services.AddScoped<IEmailSender, BTEmailService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
