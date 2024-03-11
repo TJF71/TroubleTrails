@@ -1,4 +1,5 @@
-﻿using TroubleTrails.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TroubleTrails.Data;
 using TroubleTrails.Models;
 using TroubleTrails.Services.Interfaces;
 
@@ -13,14 +14,35 @@ namespace TroubleTrails.Services
             _context = context;
         }
 
-        public Task<bool> AcceptInviteAsync(Guid? token, string userId, int companyId)
+        public async Task<bool> AcceptInviteAsync(Guid? token, string userId, int companyId)
         {
-            throw new NotImplementedException();
+            Invite? invite = await _context.Invites.FirstOrDefaultAsync(i => i.CompanyToken == token);
+
+            if(invite == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                // cancel the invite; assign to the user and save
+                invite.IsValid = false;
+                invite.InviteeId = userId;
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
-        public Task AddNewInviteAsync(Invite invite)
+        public async Task AddNewInviteAsync(Invite invite)
         {
-            throw new NotImplementedException();
+
         }
 
         public Task<bool> AnyInviteAsync(Guid token, string email, int companyId)
