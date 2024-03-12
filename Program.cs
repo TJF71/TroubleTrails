@@ -28,8 +28,7 @@ builder.Services.AddScoped<IBTProjectService, BTProjectService>(); // method to 
 builder.Services.AddScoped<IBTTicketService, BTTicketService>(); // method to add ticket service
 builder.Services.AddScoped<IBTTicketHistoryService, BTTicketHistoryService>();
 builder.Services.AddScoped<IBTNotificationService, BTNotificationService>();
-
-//builder.Services.AddScoped<IBTInviteService, BTInviteService>();
+builder.Services.AddScoped<IBTinviteService, BTInviteService>();
 
 // Custom Email Services
 builder.Services.AddScoped<IEmailSender, BTEmailService>();
