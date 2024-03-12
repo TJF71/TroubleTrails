@@ -43,12 +43,25 @@ namespace TroubleTrails.Services
 
         public string FormatFileSize(long bytes)
         {
-
+            int counter = 0;
+            decimal fileSize = bytes;
+            while (Math.Round(fileSize / 1024) >= 1)
+            {
+                fileSize /= bytes;
+                counter++;
+            }
+            return string.Format("{0:n1}{1}", fileSize, suffixes[counter]);  //{0:n1} equal one decimal place
         }
 
         public string GetFileIcon(string file)
         {
-            throw new NotImplementedException();
+           string fileImage = "default";
+            if (!string.IsNullOrWhiteSpace(file))  //if the file is not null
+            {
+                fileImage = Path.GetExtension(file).Replace(".", "");// gets us the three letter extension such as PNG etc..
+                return $"/img/png/{fileImage}.png";
+            }
+            return fileImage;
         }
     }
 }
