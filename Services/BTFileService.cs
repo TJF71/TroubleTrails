@@ -29,6 +29,10 @@ namespace TroubleTrails.Services
                 MemoryStream memoryStream = new();  //instantiate MemoryStream
                 await file.CopyToAsync(memoryStream); // copy file to memorystream  
                 byte[] byteFile = memoryStream.ToArray();  //convert to array
+                memoryStream.Close();
+                memoryStream.Dispose(); // clean up
+
+                return byteFile;
             }
             catch (Exception)
             {
@@ -39,7 +43,7 @@ namespace TroubleTrails.Services
 
         public string FormatFileSize(long bytes)
         {
-            throw new NotImplementedException();
+
         }
 
         public string GetFileIcon(string file)
