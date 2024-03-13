@@ -7,6 +7,6 @@
         Defect,
         ChangeRequest,
         Enhancement,
-        GeneralTaks
+        GeneralTask
     }
 }

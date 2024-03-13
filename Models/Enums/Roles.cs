@@ -6,6 +6,6 @@
         ProjectManager,
         Developer,
         Submitter,
-        DemuUser
+        DemoUser
     }
 }
