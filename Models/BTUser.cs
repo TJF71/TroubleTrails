@@ -23,14 +23,14 @@ namespace TroubleTrails.Models
 
         [NotMapped]
         [DataType(DataType.Upload)]
-        public IFormFile AvatarFormFile { get; set; }
+        public IFormFile? AvatarFormFile { get; set; }
 
         [DisplayName("Avatar")]
-        public string AvatarFileName { get; set; }
-        public byte[] AvatarFileData { get; set; } 
+        public string? AvatarFileName { get; set; }
+        public byte[]? AvatarFileData { get; set; } 
 
         [Display(Name = "File Extension")]
-        public string AvatarContentType { get; set; } 
+        public string? AvatarContentType { get; set; } 
 
        public int? CompanyID { get; set; } //FK to the company table
 

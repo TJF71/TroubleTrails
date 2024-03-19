@@ -44,10 +44,10 @@ namespace TroubleTrails.Data
             return builder.ToString();
         }
 
-        public static async Task ManageDataAsync(IHost host)
+        public static async Task ManageDataAsync(IServiceProvider svcProvider)
         {
-            using var svcScope = host.Services.CreateScope();
-            var svcProvider = svcScope.ServiceProvider;
+           // using var svcScope = host.Services.CreateScope();
+           // var svcProvider = svcScope.ServiceProvider;
             //Service: An instance of RoleManager
             var dbContextSvc = svcProvider.GetRequiredService<ApplicationDbContext>();
             //Service: An instance of RoleManager
