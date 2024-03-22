@@ -35,9 +35,9 @@ namespace TroubleTrails.Models
        public int? CompanyID { get; set; } //FK to the company table
 
         //Navigation Properties
-        public virtual Company Company { get; set; } // navigation property to the company table
+        public virtual Company? Company { get; set; } // navigation property to the company table
 
-        public virtual ICollection<Project> Projects { get; set; } // join table between btuser and project
+        public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();// join table between btuser and project
 
     }
 }
