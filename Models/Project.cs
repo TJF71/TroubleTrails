@@ -17,10 +17,10 @@ namespace TroubleTrails.Models
         [Required]  // required field
         [StringLength(50)]
         [DisplayName("Project Name")]
-        public string Name { get; set; }  // name of the project
+        public string? Name { get; set; }  // name of the project
 
         [DisplayName("Description")]
-        public string Description { get; set; } // description of the project
+        public string? Description { get; set; } // description of the project
 
         [DisplayName("Start Date")]
         public DateTimeOffset StartDate { get; set; } // start date of the project
@@ -34,23 +34,23 @@ namespace TroubleTrails.Models
 
         [NotMapped]
         [DataType(DataType.Upload)]
-        public IFormFile ImageFormFile { get; set; } // the image file that is being uploaded
+        public IFormFile? ImageFormFile { get; set; } // the image file that is being uploaded
 
         [DisplayName("File Name")]
-        public string ImageFileName { get; set; } // the name of the image file that is being uploaded 
+        public string? ImageFileName { get; set; } // the name of the image file that is being uploaded 
 
-        public byte[] ImageFileData { get; set; } // the data of the image file that is being uploaded
+        public byte[]? ImageFileData { get; set; } // the data of the image file that is being uploaded
 
         [DisplayName("File Extension")]
-        public string ImageContentType { get; set; } // image type 
+        public string? ImageContentType { get; set; } // image type 
 
         public bool Archived { get; set; } // if the project is archived or not 'true' or 'false
 
 
         //Navigation Properties
-        public virtual Company Company { get; set; } // navigation property to the company table
+        public virtual Company? Company { get; set; } // navigation property to the company table
 
-        public virtual ProjectPriority ProjectPriority { get; set; } // navigation property to the project priority table
+        public virtual ProjectPriority? ProjectPriority { get; set; } // navigation property to the project priority table
 
         public virtual ICollection<BTUser> Members { get; set; } = new HashSet<BTUser>();  // navigation property to the member table
 
