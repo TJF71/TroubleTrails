@@ -17,7 +17,7 @@ namespace TroubleTrails.Models
         [Required]  // required field
         [StringLength(50)]
         [DisplayName("Project Name")]
-        public string? Name { get; set; }  // name of the project
+        public string Name { get; set; }  // name of the project
 
         [DisplayName("Description")]
         public string? Description { get; set; } // description of the project
