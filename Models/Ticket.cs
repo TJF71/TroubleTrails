@@ -42,7 +42,7 @@ namespace TroubleTrails.Models
         public int TicketStatusId { get; set; } // Foreign Key to the TicketStatus table
 
         [DisplayName("Ticket Owner")]
-        public string OwnerUserId { get; set; } // Foreign Key to the User table\
+        public string? OwnerUserId { get; set; } // Foreign Key to the User table\
                                                 // not integer because it is a BTUser    
 
         [DisplayName("Ticket Developer")]
