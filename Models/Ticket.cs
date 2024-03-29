@@ -46,21 +46,21 @@ namespace TroubleTrails.Models
                                                 // not integer because it is a BTUser    
 
         [DisplayName("Ticket Developer")]
-        public string DeveloperUserId { get; set; } // Foreign Key to the User table
+        public string? DeveloperUserId { get; set; } // Foreign Key to the User table
                                                     // not integer because it is a BTUser
                                                 
         // Navigation Properties
-        public virtual Project Project { get; set; } // navigation property to the Project table    
+        public virtual Project? Project { get; set; } // navigation property to the Project table    
 
-        public virtual TicketType TicketType { get; set; } // navigation property to the TicketType table
+        public virtual TicketType? TicketType { get; set; } // navigation property to the TicketType table
 
-        public virtual TicketPriority TicketPriority { get; set; } // navigation property to the TicketPriority table
+        public virtual TicketPriority? TicketPriority { get; set; } // navigation property to the TicketPriority table
 
-        public virtual TicketStatus TicketStatus { get; set; } // navigation property to the TicketStatus table
+        public virtual TicketStatus? TicketStatus { get; set; } // navigation property to the TicketStatus table
 
-        public virtual BTUser OwnerUser { get; set; } // navigation property to the User table
+        public virtual BTUser? OwnerUser { get; set; } // navigation property to the User table
 
-        public virtual BTUser DeveloperUser { get; set; } // navigation property to the User table  
+        public virtual BTUser? DeveloperUser { get; set; } // navigation property to the User table  
 
 
         // Navigation Properties for collections. One ticket can have many comments, attachments, and notifications
