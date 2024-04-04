@@ -5,6 +5,7 @@ using System.Configuration;
 using TroubleTrails.Data;
 using TroubleTrails.Models;
 using TroubleTrails.Services;
+using TroubleTrails.Services.Factories;
 using TroubleTrails.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddClaimsPrincipalFactory<BTUserClaimsPrincipalFactory>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 
