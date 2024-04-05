@@ -1,10 +1,13 @@
-﻿using TroubleTrails.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using TroubleTrails.Models;
 
 namespace TroubleTrails.Services.Interfaces
 {
     public interface IBTRolesService
     {
         public Task<bool> IsUserInRoleAsync(BTUser user, string roleName); // first method to check if a user is in a role
+
+        public Task<List<IdentityRole>> GetRolesAsync(); // method to list all the roles
 
         public Task<IEnumerable<string>> GetUserRolesAsync(BTUser user); // second method to list all the roles a user is in
 

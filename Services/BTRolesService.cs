@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TroubleTrails.Data;
 using TroubleTrails.Models;
 using TroubleTrails.Services.Interfaces;
@@ -22,6 +23,25 @@ namespace TroubleTrails.Services
             _userManager = userManager; // set the user manager to the private field
         }
 
+        #region Get Roles
+        public async Task<List<IdentityRole>> GetRolesAsync()
+        {
+            try
+            {
+                List<IdentityRole> result = new();
+
+                result = await _context.Roles.ToListAsync(); // get all the roles from the db
+
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
         async public Task<bool> AddUserToRoleAsync(BTUser user, string roleName)
         {
            bool result = (await _userManager.AddToRoleAsync(user, roleName)).Succeeded; // add the user to the role and store the result
