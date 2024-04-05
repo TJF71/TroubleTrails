@@ -17,6 +17,7 @@ namespace TroubleTrails.Controllers
             _rolesService = rolesService;
             _companyInfoService = companyInfoService;
         }
+        [HttpGet]
         public async Task<IActionResult> ManageUserRoles()
         {
             // Add an instance of the ViewModel as a list (model)
