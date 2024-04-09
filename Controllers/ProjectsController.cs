@@ -6,17 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TroubleTrails.Data;
+using TroubleTrails.Extensions;
 using TroubleTrails.Models;
+using TroubleTrails.Models.Enums;
+using TroubleTrails.Models.ViewModels;
+using TroubleTrails.Services.Interfaces;
 
 namespace TroubleTrails.Controllers
 {
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IBTRolesService _rolesService;
+        private readonly IBTLookupService _lookupService;
 
-        public ProjectsController(ApplicationDbContext context)
+        public ProjectsController(ApplicationDbContext context,
+            IBTRolesService rolesService, 
+            IBTLookupService lookupService)
         {
             _context = context;
+            _rolesService = rolesService;
+            _lookupService = lookupService;
         }
 
         // GET: Projects
@@ -47,11 +57,18 @@ namespace TroubleTrails.Controllers
         }
 
         // GET: Projects/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id");
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id");
-            return View();
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            // Add ViewModel instance "AddProjectWithPMViewModel"
+            AddProjectWithPMViewModel model = new();
+
+            // Load SelectList with data i.e. PMList and PriorityList
+            model.PMList = new SelectList(await _rolesService.GetUsersInRoleAsync(Roles.ProjectManager.ToString(), companyId), "Id", "FullName");
+            model.PriorityList = new SelectList(await _lookupService.GetProjectPrioritiesAsync(), "Id", "Name");
+
+            return View(model);
         }
 
         // POST: Projects/Create
