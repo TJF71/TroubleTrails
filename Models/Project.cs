@@ -8,6 +8,25 @@ namespace TroubleTrails.Models
 {
     public class Project
     {
+        private DateTimeOffset _startDate;
+        private DateTimeOffset _endDate;
+
+        [DisplayName("Start Date")]
+        [DataType(DataType.Date)]
+        public DateTimeOffset StartDate
+        {
+            get => _startDate;
+            set => _startDate = value.ToUniversalTime();
+        }
+
+        [DisplayName("End Date")]
+        [DataType(DataType.Date)]
+        public DateTimeOffset EndDate
+        {
+            get => _endDate;
+            set => _endDate = value.ToUniversalTime();
+        }
+
 
         public int Id { get; set; } // PK
 
@@ -22,13 +41,13 @@ namespace TroubleTrails.Models
         [DisplayName("Description")]
         public string? Description { get; set; } // description of the project
 
-        [DisplayName("Start Date")]
-        [DataType(DataType.Date)]
-        public DateTimeOffset StartDate { get; set; } // start date of the project
+        //[DisplayName("Start Date")]
+        //[DataType(DataType.Date)]
+        //public DateTimeOffset StartDate { get; set; } // start date of the project
 
-        [DisplayName("End Date")]
-        [DataType(DataType.Date)]
-        public DateTimeOffset EndDate { get; set;}  //  end date of the project
+        //[DisplayName("End Date")]
+        //[DataType(DataType.Date)]
+        //public DateTimeOffset EndDate { get; set;}  //  end date of the project
 
         [DisplayName("Priority")]
         public int? ProjectPriorityId { get; set; } // FK which references the project priority table. Can be null
