@@ -23,9 +23,11 @@ namespace TroubleTrails.Models
         public string? Description { get; set; } // description of the project
 
         [DisplayName("Start Date")]
+        [DataType(DataType.Date)]
         public DateTimeOffset StartDate { get; set; } // start date of the project
 
         [DisplayName("End Date")]
+        [DataType(DataType.Date)]
         public DateTimeOffset EndDate { get; set;}  //  end date of the project
 
         [DisplayName("Priority")]
