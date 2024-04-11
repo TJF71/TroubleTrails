@@ -7,6 +7,24 @@ namespace TroubleTrails.Models
     {
         public int Id { get; set; } // Primary Key   
 
+        private DateTimeOffset _created;
+        private DateTimeOffset? _updated;
+
+        [DisplayName("Created")]
+        public DateTimeOffset Created
+        {
+            get => _created;
+            set => _created = value.ToUniversalTime();
+        }
+       
+
+        [DisplayName("Updated")]
+        public DateTimeOffset? Updated
+        {
+            get => _updated;
+            set => _updated = value?.ToUniversalTime();
+        }
+
         [Required]                  //data annotation
         [StringLength(50)]          //data annotation
         [DisplayName("Title")]      //data annotation
@@ -16,13 +34,13 @@ namespace TroubleTrails.Models
         [DisplayName("Description")]
         public string Description { get; set; } // Description of the ticket.  No text limit   
 
-        [DataType(DataType.Date)]        
-        [DisplayName("Created")]
-        public DateTimeOffset Created { get; set; } // When the ticket was created
+        //[DataType(DataType.Date)]        
+        //[DisplayName("Created")]
+        //public DateTimeOffset Created { get; set; } // When the ticket was created
 
-        [DataType(DataType.Date)]
-        [DisplayName("Updated")]
-        public DateTimeOffset? Updated { get; set; } // When the ticket was last updated.  Can be null(?)
+        //[DataType(DataType.Date)]
+        //[DisplayName("Updated")]
+        //public DateTimeOffset Updated { get; set; } // When the ticket was last updated.  Can be null(?)
 
         [DisplayName("Archived")]
         public bool Archived { get; set; } // Is the ticket archived?
