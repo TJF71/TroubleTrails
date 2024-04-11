@@ -15,27 +15,27 @@ namespace TroubleTrails.Models
         public DateTimeOffset Created { get; set; } // when the attachment was created
 
         [DisplayName("Team Member")]   
-        public string UserId { get; set; } // FK which references the user table
+        public string? UserId { get; set; } // FK which references the user table
 
         [DisplayName("File Description")]
-        public string Description { get; set; }  
+        public string? Description { get; set; }  
 
 
 
         [NotMapped]
         [DataType(DataType.Upload)]
-        public IFormFile FormFile { get; set; } // the file that is being uploaded
+        public IFormFile? FormFile { get; set; } // the file that is being uploaded
 
         [DisplayName("File Name")]
-        public string FileName { get; set; } // the name of the file that is being uploaded 
+        public string? FileName { get; set; } // the name of the file that is being uploaded 
 
-        public byte[] FileData { get; set; } // the data of the file that is being uploaded
+        public byte[]? FileData { get; set; } // the data of the file that is being uploaded
 
         [DisplayName("File Extension")]
-        public string FileContentType { get; set; }  //   
+        public string? FileContentType { get; set; }  //   
 
         //Navigation Properties
-        public virtual Ticket Ticket { get; set; } // navigation property to the ticket table   
-        public virtual BTUser User { get; set; } // navigation property to the user table       
+        public virtual Ticket? Ticket { get; set; } // navigation property to the ticket table   
+        public virtual BTUser? User { get; set; } // navigation property to the user table       
     }
 }

@@ -17,34 +17,34 @@ namespace TroubleTrails.Models
 
       
         [DisplayName("Company")]
-        public int CompanyId { get; set; } // FK which references the company table
+        public int? CompanyId { get; set; } // FK which references the company table
 
         [DisplayName("Project")]
-        public int ProjectId { get; set; } // FK which references the project table
+        public int? ProjectId { get; set; } // FK which references the project table
 
         [DisplayName("Invitor")]
-        public string InvitorId { get; set; } // FK which references the Id of a user
+        public string? InvitorId { get; set; } // FK which references the Id of a user
 
         [DisplayName("Invitee")]
-        public string InviteeId { get; set; } // FK which references the Id of a user
+        public string? InviteeId { get; set; } // FK which references the Id of a user
 
         [DisplayName("Invitee Email")]
-        public string InviteeEmail { get; set; } // email of the invitee
+        public string? InviteeEmail { get; set; } // email of the invitee
 
         [DisplayName("Invitee First Name")]
-        public string InviteeFirstName { get; set; } // first name of the invitee
+        public string? InviteeFirstName { get; set; } // first name of the invitee
         
         [DisplayName("Invitee Last Name")]
-        public string InviteeLastName { get; set; } // last name of the invitee
+        public string? InviteeLastName { get; set; } // last name of the invitee
 
         public bool IsValid { get; set; } // if the invite is valid or not true or false
 
         //Navigation Properties
 
-        public virtual Company Company { get; set; } // navigation property to the company table
-        public virtual BTUser Invitor { get; set; } // navigation property to the user table
-        public virtual BTUser Invitee { get; set; } // navigation property to the user table
-        public virtual Project Project { get; set; } // navigation property to the project table
+        public virtual Company? Company { get; set; } // navigation property to the company table
+        public virtual BTUser? Invitor { get; set; } // navigation property to the user table
+        public virtual BTUser? Invitee { get; set; } // navigation property to the user table
+        public virtual Project? Project { get; set; } // navigation property to the project table
 
     }
 }

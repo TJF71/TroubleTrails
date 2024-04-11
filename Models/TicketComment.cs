@@ -8,7 +8,7 @@ namespace TroubleTrails.Models
 
 
         [DisplayName("Member Comment")]
-        public string Comment { get; set; }  // the comment itself
+        public string? Comment { get; set; }  // the comment itself
 
         [DisplayName("Date")]
         public DateTimeOffset Created { get; set; } // when the comment was made
@@ -17,14 +17,14 @@ namespace TroubleTrails.Models
         public int TicketId { get; set; } // FK which references the ticket table   
 
         [DisplayName("Team Member")]
-        public string UserId { get; set; } // FK which references the user table
+        public string? UserId { get; set; } // FK which references the user table
 
         //--Navigation Properties--//
 
-        public virtual Ticket Ticket { get; set; } // navigation property to the ticket table   
+        public virtual Ticket? Ticket { get; set; } // navigation property to the ticket table   
                                                     // gives us access to the properties of the ticket table
 
-        public virtual BTUser User { get; set; } // navigation property to the user table   
+        public virtual BTUser? User { get; set; } // navigation property to the user table   
 
 
 

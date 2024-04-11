@@ -34,9 +34,9 @@ namespace TroubleTrails.Models
         public bool Viewed { get; set; } // if the notification has been viewed or not true or false
 
         //Navigation Properties
-        public virtual Ticket Ticket { get; set; } // navigation property to the ticket table
-        public virtual BTUser Recipient { get; set; } // navigation property to the user table
-        public virtual BTUser Sender { get; set; } // navigation property to the user table
+        public virtual Ticket? Ticket { get; set; } // navigation property to the ticket table
+        public virtual BTUser? Recipient { get; set; } // navigation property to the user table
+        public virtual BTUser? Sender { get; set; } // navigation property to the user table
 
     }
 }
