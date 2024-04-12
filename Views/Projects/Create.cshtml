@@ -1,4 +1,5 @@
 ﻿@model TroubleTrails.Models.ViewModels.AddProjectWithPMViewModel
+@using TroubleTrails.Models.Enums
 
 @{
     ViewData["Title"] = "Create";
@@ -34,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label"> Choose a priority </label>
-                <select asp-for="ProjectPriority" class ="form-control" asp-items="@Model.PriorityList"></select>
+                <select asp-for="Project.ProjectPriorityId" class ="form-control" asp-items="@Model.PriorityList"></select>
             </div>
 
             <div class="form-group">
@@ -55,12 +56,15 @@
             }
 
 
-            <div class="form-group">
-                <label class="control-label"> Project Manager </label>
-                <select asp-for="PmId" class="form-control" asp-items="@Model.PMList">
-                    <option></option>
-                </select>
-            </div>
+            @if (User.IsInRole(Roles.Admin.ToString()))
+            {
+                <div class="form-group">
+                    <label class="control-label"> Project Manager </label>
+                    <select asp-for="PmId" class="form-control" asp-items="@Model.PMList">
+                        <option></option>
+                    </select>
+                </div>
+            }
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
