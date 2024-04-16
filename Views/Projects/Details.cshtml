@@ -44,7 +44,11 @@
             @Html.DisplayNameFor(model => model.ImageFileData)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageFileData)
+            @if (Model.ImageFileData != null)
+            {
+                <img style="width:60px;height:60px"
+                     src="data:image/*;base64,@(Convert.ToBase64String(Model.ImageFileData))" />
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ImageContentType)
@@ -68,7 +72,7 @@
             @Html.DisplayNameFor(model => model.ProjectPriority)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProjectPriority.Id)
+            @Html.DisplayFor(model => model.ProjectPriority.Name)
         </dd>
     </dl>
 </div>

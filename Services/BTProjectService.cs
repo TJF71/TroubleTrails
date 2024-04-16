@@ -90,9 +90,18 @@ namespace TroubleTrails.Services
         // CRUD = Archive (Delete)
         public async Task ArchiveProjectAsync(Project project)
         {
-            project.Archived = true; // set the project to archived
-            _context.Update(project);
-            await _context.SaveChangesAsync();
+            try
+            {
+                project.Archived = true; // set the project to archived
+                _context.Update(project);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         public async Task<List<BTUser>> GetAllProjectMembersExceptPMAsync(int projectId)
@@ -162,7 +171,7 @@ namespace TroubleTrails.Services
         // CRUD - Read
         public async Task<Project> GetProjectByIdAsync(int projectId, int companyId)
         {
-            Project project = await _context.Projects
+            Project? project = await _context.Projects
                                             .Include(p => p.Tickets)
                                             .Include(p => p.Members)
                                             .Include(p => p.ProjectPriority)
