@@ -45,6 +45,8 @@ namespace TroubleTrails.Models
         [DisplayName("Archived")]
         public bool Archived { get; set; } // Is the ticket archived?
 
+        [DisplayName("Archived By Project")]
+        public bool ArchivedByProject { get; set; } 
 
         // Foreign Keys
         [DisplayName("Project")]

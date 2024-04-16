@@ -93,8 +93,15 @@ namespace TroubleTrails.Services
             try
             {
                 project.Archived = true; // set the project to archived
-                _context.Update(project);
-                await _context.SaveChangesAsync();
+                await UpdateProjectAsync(project); // update the project
+
+                //Archive all the tickets in the project
+                foreach (Ticket ticket in project.Tickets)
+                {
+                    ticket.ArchivedByProject = true; // set the ticket to archived
+                    _context.Update(ticket); // update the ticket
+                    await _context.SaveChangesAsync(); // save the changes to the database
+                }
             }
             catch (Exception)
             {
@@ -368,7 +375,29 @@ namespace TroubleTrails.Services
 
 
         }
-        
+
+        public async Task RestoreProjectAsync(Project project)
+        {
+            try
+            {
+                project.Archived = false; // set the project to not archived
+                await UpdateProjectAsync(project); // update the project
+
+                //Archive all the tickets in the project
+                foreach (Ticket ticket in project.Tickets)
+                {
+                    ticket.ArchivedByProject = false; // set the ticket to not archived
+                    _context.Update(ticket); // update the ticket
+                    await _context.SaveChangesAsync(); // save the changes to the database
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         // CRUD - Update
         public async Task UpdateProjectAsync(Project project)
         {
