@@ -32,7 +32,7 @@ namespace TroubleTrails.Models
         [Display(Name = "File Extension")]
         public string? AvatarContentType { get; set; } 
 
-       public int? CompanyID { get; set; } //FK to the company table
+       public int CompanyID { get; set; } //FK to the company table
 
         //Navigation Properties
         public virtual Company? Company { get; set; } // navigation property to the company table
