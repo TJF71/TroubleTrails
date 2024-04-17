@@ -122,7 +122,7 @@ namespace TroubleTrails.Services
             return teamMembers;
         }
 
-        public async Task<List<Project>> GetAllProjectsByCompany(int companyId)
+        public async Task<List<Project>> GetAllProjectsByCompanyAsync(int companyId)
         {
             List<Project> projects = new();
 
@@ -155,7 +155,7 @@ namespace TroubleTrails.Services
 
         public async Task<List<Project>> GetAllProjectsByPriority(int companyId, string priorityName)
         {
-            List<Project> projects = await GetAllProjectsByCompany(companyId); // get all the projects by company id
+            List<Project> projects = await GetAllProjectsByCompanyAsync(companyId); // get all the projects by company id
             int priorityId = await LookupProjectPriorityId(priorityName); // get the priority id by the priority name
 
             return projects.Where(p => p.ProjectPriorityId == priorityId).ToList(); // return the projects where the project priority id is equal to the priority id
@@ -165,7 +165,7 @@ namespace TroubleTrails.Services
 
         public async Task<List<Project>> GetArchivedProjectsByCompany(int companyId)
         {
-            List<Project> projects = await GetAllProjectsByCompany(companyId);  // get all the projects by company id
+            List<Project> projects = await GetAllProjectsByCompanyAsync(companyId);  // get all the projects by company id
 
             return projects.Where(p => p.Archived == true).ToList(); // return the projects where the archived is true 
         }
