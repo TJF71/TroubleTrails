@@ -18,7 +18,7 @@ namespace TroubleTrails.Services.Interfaces
 
         public Task<List<BTUser>> GetAllProjectMembersExceptPMAsync(int projectId);
 
-        public Task<List<Project>> GetArchivedProjectsByCompany(int companyId);
+        public Task<List<Project>> GetArchivedProjectsByCompanyAsync(int companyId);
 
         public Task<List<BTUser>> GetDevelopersOnProjectAsync(int projectId);
 
