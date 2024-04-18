@@ -94,7 +94,6 @@
 
                     @{
                         bool isProjectPM = (await ProjectService.GetProjectManagerAsync(item.Id))?.Id == bTUser.Id; // is this the project manager?
-
                     }
 
                     @if (User.IsInRole(nameof(Roles.Admin)) || isProjectPM)
