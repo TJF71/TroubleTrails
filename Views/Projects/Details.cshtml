@@ -79,7 +79,7 @@
                             <hr />
                         </div>
                         <div class="body" style="overflow-y:auto;height:300px;">
-                            [Project Manager]
+                            @* [Project Manager] *@
                             @* if() logic for Avatar/Default etc *@
 
                             @if (projectManager != null)
@@ -136,7 +136,7 @@
                         <div class="body" style="overflow-y:auto;height:300px;">
                             <ul class="right_chat list-unstyled mb-0">
 
-                                [Project Members]
+                                @* [Project Members] *@
                                 @* Logic for avatars *@
 
                                 @foreach (BTUser member in await ProjectService.GetAllProjectMembersExceptPMAsync(Model.Id))
