@@ -93,7 +93,8 @@
                                     else
                                     {
                                         <img class="rounded-circle" style="width:60px;height:60px"
-                                             src="~/images/avatars/default.png" alt="" />
+                                            @*  src="~/images/avatars/default.png" alt="" /> *@
+                                        src = "~/img/avatardefault.png" alt = "" />
                                     }
                                     <div>
 
@@ -110,7 +111,7 @@
                             else
                             {
                                 <div>
-                                    <img class="rounded-circle" style="width:60px;height:60px;" src="/img/professionalBusinessman.png" alt="">
+                                    <img class="rounded-circle" style="width:60px;height:60px;" src="/img/avatardefault.png" alt="">
                                     <div class="wid-u-info">
                                         <h5 class="text-muted m-b-0">Not Assigned</h5>
                                         @if (User.IsInRole(nameof(Roles.Admin)))
