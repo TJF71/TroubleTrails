@@ -18,7 +18,7 @@ namespace TroubleTrails.Controllers
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<BTUser> _userManager;  
+        private readonly UserManager<BTUser> _userManager;
         private readonly IBTProjectService _projectService;
         private readonly IBTLookupService _lookupService;
         private readonly IBTTicketService _ticketService;
@@ -49,17 +49,17 @@ namespace TroubleTrails.Controllers
             BTUser? btuser = await _userManager.GetUserAsync(User);
 
             List<Ticket> tickets = await _ticketService.GetTicketsByUserIdAsync(btuser.Id, btuser.CompanyID);
-            
+
             return View(tickets);
         }
 
         public async Task<IActionResult> AllTickets()
-        { 
-            int companyId = User.Identity.GetCompanyId().Value; 
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
 
             List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyAsync(companyId);
 
-            if(User.IsInRole(nameof(Roles.Developer)) || User.IsInRole(nameof(Roles.Submitter)))
+            if (User.IsInRole(nameof(Roles.Developer)) || User.IsInRole(nameof(Roles.Submitter)))
             {
                 return View(tickets.Where(t => t.Archived == false));
             }
@@ -69,6 +69,19 @@ namespace TroubleTrails.Controllers
             }
 
         }
+
+        public async Task<IActionResult> ArchivedTickets()
+        {
+
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            List<Ticket> tickets = await _ticketService.GetArchivedTicketsAsync(companyId);
+
+            return View(tickets);
+
+        }
+
+
 
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -97,7 +110,7 @@ namespace TroubleTrails.Controllers
         // GET: Tickets/Create
         public async Task<IActionResult> Create()
         {
-            BTUser? btUser = await  _userManager.GetUserAsync(User);
+            BTUser? btUser = await _userManager.GetUserAsync(User);
 
             int companyId = User.Identity.GetCompanyId().Value;
 
@@ -106,7 +119,7 @@ namespace TroubleTrails.Controllers
                 ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyAsync(companyId), "Id", "Name");
 
             }
-            else 
+            else
             {
                 ViewData["ProjectId"] = new SelectList(await _projectService.GetUserProjectsAsync(btUser.Id), "Id", "Name");
             }
@@ -128,7 +141,7 @@ namespace TroubleTrails.Controllers
 
             if (ModelState.IsValid)
             {
-                                              
+
                 ticket.Created = DateTimeOffset.Now;
                 ticket.OwnerUserId = btUser.Id;
 
@@ -178,7 +191,7 @@ namespace TroubleTrails.Controllers
 
             ViewData["TicketPriorityId"] = new SelectList(await _lookupService.GetTicketPrioritiesAsync(), "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(await _lookupService.GetTicketStatusesAsync(), "Id", "Name", ticket.TicketStatusId);
-            ViewData["TicketTypeId"] = new SelectList( await _lookupService.GetTicketTypesAsync(),"Id", "Name", ticket.TicketTypeId);
+            ViewData["TicketTypeId"] = new SelectList(await _lookupService.GetTicketTypesAsync(), "Id", "Name", ticket.TicketTypeId);
 
 
             return View(ticket);
@@ -260,7 +273,7 @@ namespace TroubleTrails.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-      
+
         // GET: Tickets/Restore/5
         public async Task<IActionResult> Restore(int? id)
         {
@@ -295,7 +308,7 @@ namespace TroubleTrails.Controllers
 
         private async Task<bool> TicketExists(int id)
         {
-          int companyId = User.Identity.GetCompanyId().Value;
+            int companyId = User.Identity.GetCompanyId().Value;
 
             return (await _ticketService.GetAllTicketsByCompanyAsync(companyId)).Any(t => t.Id == id);
 
