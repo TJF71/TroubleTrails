@@ -6,6 +6,8 @@ namespace TroubleTrails.Services.Interfaces
     {
         // CRUD Methods
         public Task AddNewTicketAsync(Ticket ticket);
+        public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment);
+
         public Task UpdateTicketAsync(Ticket ticket);
         public Task<Ticket> GetTicketByIdAsync(int ticketId);
         public Task ArchiveTicketAsync(Ticket ticket);

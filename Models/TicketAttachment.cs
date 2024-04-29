@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TroubleTrails.Extensions;
 
 namespace TroubleTrails.Models
 {
@@ -18,13 +19,18 @@ namespace TroubleTrails.Models
         public string? UserId { get; set; } // FK which references the user table
 
         [DisplayName("File Description")]
-        public string? Description { get; set; }  
+        public string? Description { get; set; }
 
 
 
         [NotMapped]
+        [DisplayName("Select a file")]
         [DataType(DataType.Upload)]
+        [MaxFileSize(1024 * 1024)]
+        [AllowedExtensions(new string[] { ".jpg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".pdf" })]
         public IFormFile? FormFile { get; set; } // the file that is being uploaded
+
+
 
         [DisplayName("File Name")]
         public string? FileName { get; set; } // the name of the file that is being uploaded 

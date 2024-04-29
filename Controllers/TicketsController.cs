@@ -11,6 +11,7 @@ using TroubleTrails.Data;
 using TroubleTrails.Extensions;
 using TroubleTrails.Models;
 using TroubleTrails.Models.Enums;
+using TroubleTrails.Services;
 using TroubleTrails.Services.Interfaces;
 
 namespace TroubleTrails.Controllers
@@ -22,18 +23,21 @@ namespace TroubleTrails.Controllers
         private readonly IBTProjectService _projectService;
         private readonly IBTLookupService _lookupService;
         private readonly IBTTicketService _ticketService;
+        private readonly IBTFileService _fileService;
 
         public TicketsController(ApplicationDbContext context,
                                   UserManager<BTUser> userManager,
                                   IBTProjectService projectService,
                                   IBTLookupService lookupService,
-                                  IBTTicketService ticketService)
+                                  IBTTicketService ticketService,
+                                  IBTFileService fileService)
         {
             _context = context;
             _userManager = userManager;
             _projectService = projectService;
             _lookupService = lookupService;
             _ticketService = ticketService;
+            _fileService = fileService;
         }
 
         // GET: Tickets
@@ -259,11 +263,36 @@ namespace TroubleTrails.Controllers
 
             return RedirectToAction("Details", new { id = ticketComment.TicketId});
         }
-        
-        
-        
-        
-        
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddTicketAttachment([Bind("Id,FormFile,Description,TicketId")] TicketAttachment ticketAttachment)
+        {
+            string statusMessage;
+
+            if (ModelState.IsValid && ticketAttachment.FormFile != null)
+            {
+                ticketAttachment.FileData = await _fileService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
+                ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
+                ticketAttachment.FileContentType = ticketAttachment.FormFile.ContentType;
+
+                ticketAttachment.Created = DateTimeOffset.Now;
+                ticketAttachment.UserId = _userManager.GetUserId(User);
+
+                await _ticketService.AddTicketAttachmentAsync(ticketAttachment);
+                statusMessage = "Success: New attachment added to Ticket.";
+            }
+            else
+            {
+                statusMessage = "Error: Invalid data.";
+
+            }
+
+            return RedirectToAction("Details", new { id = ticketAttachment.TicketId, message = statusMessage });
+        }
+
+
         // GET: Tickets/Archive/5
         public async Task<IActionResult> Archive(int? id)
         {

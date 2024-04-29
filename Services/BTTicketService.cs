@@ -70,10 +70,23 @@ namespace TroubleTrails.Services
         }
         #endregion
 
+        public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
+        {
+            try
+            {
+                await _context.AddAsync(ticketAttachment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task AssignTicketAsync(int ticketId, string userId)  // no return necessary
         {
-            Ticket ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+            Ticket? ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
             try
             {
                 if (ticket != null)
