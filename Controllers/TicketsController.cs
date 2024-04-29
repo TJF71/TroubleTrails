@@ -13,6 +13,7 @@ using TroubleTrails.Models;
 using TroubleTrails.Models.Enums;
 using TroubleTrails.Services;
 using TroubleTrails.Services.Interfaces;
+using System.IO;
 
 namespace TroubleTrails.Controllers
 {
@@ -357,6 +358,18 @@ namespace TroubleTrails.Controllers
         }
 
 
+        public async Task<IActionResult> ShowFile(int id)
+        {
+            TicketAttachment ticketAttachment = await _ticketService.GetTicketAttachmentByIdAsync(id);
+            string fileName = ticketAttachment.FileName;
+            byte[] fileData = ticketAttachment.FileData;
+            string ext = Path.GetExtension(fileName).Replace(".", "");
+
+            Response.Headers.Add("Content-Disposition", $"inline; filename={fileName}");
+            return File(fileData, $"application/{ext}");
+        }
+
+
         private async Task<bool> TicketExists(int id)
         {
             int companyId = User.Identity.GetCompanyId().Value;
@@ -364,5 +377,8 @@ namespace TroubleTrails.Controllers
             return (await _ticketService.GetAllTicketsByCompanyAsync(companyId)).Any(t => t.Id == id);
 
         }
+
+
+
     }
 }

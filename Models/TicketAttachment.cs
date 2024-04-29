@@ -7,13 +7,28 @@ namespace TroubleTrails.Models
 {
     public class TicketAttachment
     {
+        private DateTimeOffset _created;
+
+
         public int Id { get; set; } // PK
 
         [DisplayName("Ticket")]
         public int TicketId { get; set; } // FK wich references the ticket table
 
+        //[DisplayName("File Date")]
+        //public DateTimeOffset Created { get; set; } // when the attachment was created
+
+
         [DisplayName("File Date")]
-        public DateTimeOffset Created { get; set; } // when the attachment was created
+        public DateTimeOffset Created
+        {
+            get => _created;
+            set => _created = value.ToUniversalTime();
+        }
+
+
+
+
 
         [DisplayName("Team Member")]   
         public string? UserId { get; set; } // FK which references the user table
@@ -27,7 +42,7 @@ namespace TroubleTrails.Models
         [DisplayName("Select a file")]
         [DataType(DataType.Upload)]
         [MaxFileSize(1024 * 1024)]
-        [AllowedExtensions(new string[] { ".jpg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".pdf" })]
+        [AllowedExtensions(new string[] { ".jpg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".ppt", ".pptx", ".html"})]
         public IFormFile? FormFile { get; set; } // the file that is being uploaded
 
 
