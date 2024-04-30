@@ -84,7 +84,7 @@
                                 @*Form and Logic for authorized users to add comments*@
                                 <form class="form-horizontal form-bordered" asp-action="AddTicketComment" asp-controller="Tickets" method="post">
                                     <input type="hidden" asp-for="Id" name="TicketId" />
-                                    @if (Model.DeveloperUserId == bTUser.Id || Model.OwnerUserId == bTUser.Id || projectManager?.Id == bTUser.Id || User.IsInRole(nameof(Roles.Admin)))
+                                    @if (Model.DeveloperUserId == btUser.Id || Model.OwnerUserId == btUser.Id || projectManager?.Id == btUser.Id || User.IsInRole(nameof(Roles.Admin)))
                                     {
                                         <div class="form-group">
                                             <textarea asp-for="@(new TicketComment().Comment)" rows="8" class="form-control" required placeholder="Add comment..."></textarea>
