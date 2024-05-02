@@ -99,6 +99,19 @@ namespace TroubleTrails.Controllers
         
         }
 
+        public async Task<IActionResult> AssignPM(int projectId)
+        { 
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            AssignPMViewModel model = new();  
+
+            model.project = await _projectService.GetProjectByIdAsync(projectId, companyId);
+            model.PMList = new SelectList(await _rolesService.GetUsersInRoleAsync(Roles.ProjectManager.ToString(), companyId), "Id", "FullName"); // Get list of PMs with their Ids and FullNames using RolesService with three parameters
+
+            return View(model);
+        }
+
+
 
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
