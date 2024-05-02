@@ -267,6 +267,36 @@ namespace TroubleTrails.Services
             throw new NotImplementedException();
         }
 
+        #region Get Unassigned Projects
+        public async Task<List<Project>> GetUnassignedProjectsAsync(int companyId)
+        {
+            List<Project> result = new();
+            List<Project> projects = new();
+
+            try
+            {
+                projects = _context.Projects
+                                    .Include(p => p.ProjectPriority)
+                                    .Where(p=>p.CompanyId == companyId)
+                                    .ToList(); // get the projects by company id 
+
+                foreach (Project project in projects)
+                {
+                    if ((await GetProjectMembersByRoleAsync(project.Id, nameof(Roles.ProjectManager))).Count == 0)   //if there are no project managers
+                    {
+                        result.Add(project); // add the project to the result
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return result; // return the result
+        }
+        #endregion 
 
         public async Task<List<Project>> GetUserProjectsAsync(string userId)
         {

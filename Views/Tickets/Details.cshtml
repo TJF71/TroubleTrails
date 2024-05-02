@@ -21,6 +21,30 @@
 
 <h1>Ticket Details</h1>
 
+@if (!string.IsNullOrEmpty(Model.DeveloperUserId))
+{
+    <a href="javscript:void(0);">
+        @if (Model.DeveloperUser?.AvatarFileData != null)
+        {
+            <img class="media-object" src="data:image/*;base64,@(Convert.ToBase64String(btUser.AvatarFileData))" alt="" />
+        }
+        else
+        {
+            <img class="media-object"
+                 src="~/img/avatardefault.png"
+                 alt="" style="width:30px; height:30px" />
+        }
+    </a>
+
+
+    <span class="text-muted" style="font-size: x-small;">
+
+        Developer: <strong>@Model.DeveloperUser.FullName</strong>
+    </span>
+}
+
+
+
 <div>
     <div classxfont-weighteighteightgetainer-fluid">
         <div class="row gy-2">
@@ -114,7 +138,7 @@
                                                 <a href="javscript:void(0);">
                                                     @if (btUser?.AvatarFileData != null)
                                                     {
-                                                        <img class="media-object" src="data:image/*;base64,@(Convert.ToBase64String(btUser.AvatarFileData))" alt=""/>
+                                                        <img class="media-object" src="data:image/*;base64,@(Convert.ToBase64String(btUser.AvatarFileData))" alt="" />
                                                     }
                                                     else
                                                     {
@@ -126,7 +150,7 @@
 
                                                 <div class="media-body">
                                                     <span class="text-muted" style="font-size: x-small;">
-                                                       @@  @comment.User.FullName
+                                                        @@  @comment.User.FullName
                                                         <small class="float-right">@comment.Created.ToString("MM.dd.yyyy h.ss tt")</small>:
                                                     </span>
 
