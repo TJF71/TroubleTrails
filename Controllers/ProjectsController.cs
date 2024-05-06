@@ -105,7 +105,7 @@ namespace TroubleTrails.Controllers
 
             AssignPMViewModel model = new();  
 
-            model.project = await _projectService.GetProjectByIdAsync(projectId, companyId);
+            model.Project = await _projectService.GetProjectByIdAsync(projectId, companyId);
             model.PMList = new SelectList(await _rolesService.GetUsersInRoleAsync(Roles.ProjectManager.ToString(), companyId), "Id", "FullName"); // Get list of PMs with their Ids and FullNames using RolesService with three parameters
 
             return View(model);
