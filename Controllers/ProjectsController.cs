@@ -99,6 +99,7 @@ namespace TroubleTrails.Controllers
         
         }
 
+        [HttpGet]
         public async Task<IActionResult> AssignPM(int projectId)
         { 
             int companyId = User.Identity.GetCompanyId().Value;
@@ -124,6 +125,31 @@ namespace TroubleTrails.Controllers
            return RedirectToAction(nameof(AssignPM), new {projectId = model.Project.Id});
         
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> AssignMembers(int id)
+        { 
+            ProjectMembersViewModel model = new();
+
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            model.Project = await _projectService.GetProjectByIdAsync(id, companyId);
+
+            List<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(Roles.Developer), companyId);
+            List<BTUser> submitters = await _rolesService.GetUsersInRoleAsync(nameof(Roles.Submitter), companyId);
+
+            List<BTUser> companyMembers = developers.Concat(submitters).ToList();
+
+            List<string> projectMembers = model.Project.Members.Select(m => m.Id).ToList();
+
+            model.Users = new MultiSelectList(companyMembers, "Id", "FullName", projectMembers);
+
+            return View(model); 
+        }
+
+
+
 
 
         // GET: Projects/Details/5
