@@ -19,7 +19,7 @@ namespace TroubleTrails.Services
             _context = context;
             _rolesService = rolesService;
             _projectService = projectService;
-            
+
         }
 
         public async Task AddNewTicketAsync(Ticket ticket)
@@ -343,8 +343,8 @@ namespace TroubleTrails.Services
             try
             {
                 Ticket ticket = (await GetAllTicketsByCompanyAsync(companyId)).FirstOrDefault(t => t.Id == ticketId);  // no need to use FirstOrDefaultAsync as the list is already part of the application after using GetAllTicketByCompanyAsync
-                
-                if(ticket?.DeveloperUserId != null)
+
+                if (ticket?.DeveloperUserId != null)
                 {
                     developer = ticket.DeveloperUser;
                 }
@@ -367,7 +367,7 @@ namespace TroubleTrails.Services
                 if (role == Roles.Admin.ToString())
                 {
                     tickets = await GetAllTicketsByCompanyAsync(companyId);
-                } 
+                }
                 else if (role == Roles.Developer.ToString())
                 {
                     tickets = (await GetAllTicketsByCompanyAsync(companyId)).Where(t => t.DeveloperUserId == userId).ToList();
@@ -402,7 +402,7 @@ namespace TroubleTrails.Services
                     tickets = (await _projectService.GetAllProjectsByCompanyAsync(companyId)).SelectMany(p => p.Tickets).ToList();
                 }
                 else if (await _rolesService.IsUserInRoleAsync(btUser, Roles.Developer.ToString()))
-                { 
+                {
                     tickets = (await _projectService.GetAllProjectsByCompanyAsync(companyId))
                                                     .SelectMany(p => p.Tickets).Where(t => t.DeveloperUserId == userId)
                                                     .ToList();
@@ -447,6 +447,28 @@ namespace TroubleTrails.Services
         }
         #endregion
 
+        #region Get Ticket As No Tracking
+        public async Task<Ticket?> GetTicketAsNoTrackingAsync(int ticketId)
+        {
+            try
+            {
+                return await _context.Tickets
+                    .Include(t => t.DeveloperUser)
+                    .Include(t => t.Project)
+                    .Include(t => t.TicketPriority)
+                    .Include(t => t.TicketStatus)
+                    .Include(t => t.TicketType)
+                    .AsNoTracking() // no tracking is used to prevent the context from tracking the entity
+                    .FirstOrDefaultAsync(t => t.Id == ticketId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
 
         public async Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId)
         {
@@ -466,11 +488,11 @@ namespace TroubleTrails.Services
 
         public async Task<int?> LookupTicketPriorityIdAsync(string priorityName)
         {
-            try 
-            { 
+            try
+            {
                 TicketPriority priority = await _context.TicketPriorities.FirstOrDefaultAsync(p => p.Name == priorityName);
                 return priority?.Id;
-            }  
+            }
             catch (Exception)
             {
                 throw;

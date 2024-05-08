@@ -13,6 +13,7 @@ namespace TroubleTrails.Services
             _context = context;
         }
 
+        #region Add History (1)
         public async Task AddHistoryAsync(Ticket oldTicket, Ticket newTicket, string userId)
         {
             //new ticket has been added
@@ -157,6 +158,39 @@ namespace TroubleTrails.Services
 
             }
         }
+        #endregion
+
+
+        #region Add History (2)
+        public async Task AddHistoryAsync(int ticketId, string model, string userId)
+        {
+            try
+            {
+                Ticket ticket = await _context.Tickets.FindAsync(ticketId);
+                string description = model.ToLower().Replace("Ticket", "");
+                description = $"New {description}  add to ticket : {ticket.Title}";
+
+                TicketHistory history = new()
+                {
+                    TicketId = ticket.Id, // set the ticket id
+                    Property = model, // set the model
+                    OldValue = "", // nothing to set
+                    NewValue = "", // nothing to set
+                    Created = DateTimeOffset.Now, // set the created date
+                    UserId = userId, // set the user id
+                    Description = description // set the description
+                };
+
+                await _context.TicketHistories.AddAsync(history); 
+                await _context.SaveChangesAsync(); 
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
 
 
         public async Task<List<TicketHistory>> GetCompanyTicketsHistoriesAsync(int companyId)

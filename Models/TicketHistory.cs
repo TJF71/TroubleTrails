@@ -5,6 +5,7 @@ namespace TroubleTrails.Models
 {
     public class TicketHistory
     {
+        private DateTimeOffset _created;
 
         public int Id { get; set; } // PK
 
@@ -20,8 +21,17 @@ namespace TroubleTrails.Models
         [DisplayName("Current")]  
         public string? NewValue { get; set; } // new value of the property
 
+        //[DisplayName("Date Modified")]
+        //public DateTimeOffset Created { get; set; } // when the change was made 
+
         [DisplayName("Date Modified")]
-        public DateTimeOffset Created { get; set; } // when the change was made 
+        public DateTimeOffset Created 
+            { 
+            get => _created;  
+            set => _created = value.ToUniversalTime(); 
+        } // when the change was made
+
+
 
         [DisplayName("Description of Change")]
         public string? Description { get; set; } // description of the change
