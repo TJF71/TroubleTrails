@@ -148,8 +148,35 @@ namespace TroubleTrails.Controllers
             return View(model); 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignMembers(ProjectMembersViewModel model)
+        {
+            if(model.SelectedUsers != null)
+            {       
+                // Get all the members of the project except the PM
+                List<string> memberIds = (await _projectService.GetAllProjectMembersExceptPMAsync(model.Project.Id)).Select(m => m.Id).ToList();
 
+                // Remove all the members from the project
+                foreach (string member in memberIds)
+                { 
+                    await _projectService.RemoveUserFromProjectAsync(member, model.Project.Id);
+                }
 
+                // Add all the selected members to the project
+                foreach (string member in model.SelectedUsers)
+                {
+                    await _projectService.AddUserToProjectAsync(member, model.Project.Id);
+                }
+
+                // goto the details method of the project controller using the id of the project
+                return RedirectToAction("Details", "Projects", new {id = model.Project.Id});
+
+            }
+
+            return RedirectToAction(nameof(AssignMembers), new {id = model.Project.Id});
+
+        }
 
 
         // GET: Projects/Details/5

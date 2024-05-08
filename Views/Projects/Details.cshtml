@@ -93,8 +93,7 @@
                                     else
                                     {
                                         <img class="rounded-circle" style="width:60px;height:60px"
-                                           
-                                        src = "~/img/avatardefault.png" alt = "" />
+                                             src="~/img/avatardefault.png" alt="" />
                                     }
                                     <div>
 
@@ -152,14 +151,16 @@
                                                 }
                                                 else
                                                 {
-                                                    <img class="" src="~/img/avatardefault.png" alt="" />
+                                                    <img class="" style="width:30px; height:30px" src="~/img/avatardefault.png" alt="" />
                                                 }
-                                                <div class="">
-                                                    <span class="">@member.FullName</span>
-                                                    <span class="">@(await UserManager.GetRolesAsync(member)).FirstOrDefault())</span>
-                                                </div>
+
                                             </div>
-                                        </a>
+                                        </a>                                          
+                                        <div class="">
+                                            <span class="">@member.FullName</span>
+                                            <span class="" style="font-size:x-small"> [@((await UserManager.GetRolesAsync(member)).FirstOrDefault())] </span>
+                                        </div>
+
                                     </li>
                                 }
 
