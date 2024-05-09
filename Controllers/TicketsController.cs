@@ -27,13 +27,15 @@ namespace TroubleTrails.Controllers
         private readonly IBTLookupService _lookupService;
         private readonly IBTTicketService _ticketService;
         private readonly IBTFileService _fileService;
+        private readonly IBTTicketHistoryService _historyService;
 
         public TicketsController(ApplicationDbContext context,
                                   UserManager<BTUser> userManager,
                                   IBTProjectService projectService,
                                   IBTLookupService lookupService,
                                   IBTTicketService ticketService,
-                                  IBTFileService fileService)
+                                  IBTFileService fileService,
+                                  IBTTicketHistoryService historyService)
         {
             _context = context;
             _userManager = userManager;
@@ -41,6 +43,7 @@ namespace TroubleTrails.Controllers
             _lookupService = lookupService;
             _ticketService = ticketService;
             _fileService = fileService;
+            _historyService = historyService;
         }
 
         // GET: Tickets
@@ -127,7 +130,7 @@ namespace TroubleTrails.Controllers
 
             model.Ticket = await _ticketService.GetTicketByIdAsync(id);
             model.Developers = new SelectList(await _projectService.GetProjectMembersByRoleAsync(model.Ticket.ProjectId, nameof(Roles.Developer)),
-                                                "Id", "FullNane");
+                                                "Id", "FullName");
             
             return View(model);
         }
@@ -272,6 +275,7 @@ namespace TroubleTrails.Controllers
             if (ModelState.IsValid)
             {
                 BTUser? btUser = await _userManager.GetUserAsync(User);
+                Ticket oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
 
                 try
                 {
@@ -291,8 +295,10 @@ namespace TroubleTrails.Controllers
                 }
 
                 // TODO: Add Ticket History
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                await _historyService.AddHistoryAsync(oldTicket, newTicket, btUser.Id);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllTickets));
             }
 
             ViewData["TicketPriorityId"] = new SelectList(await _lookupService.GetTicketPrioritiesAsync(), "Id", "Name", ticket.TicketPriorityId);
