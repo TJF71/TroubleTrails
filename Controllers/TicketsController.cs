@@ -142,7 +142,26 @@ namespace TroubleTrails.Controllers
         {
             if(model.DeveloperId != null)
             {
-                await _ticketService.AssignTicketAsync(model.Ticket.Id, model.DeveloperId);
+                BTUser? btUser = await _userManager.GetUserAsync(User);
+                // Get the old ticket
+                Ticket oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket.Id);
+
+                try
+                {
+                    await _ticketService.AssignTicketAsync(model.Ticket.Id, model.DeveloperId);
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                // Get the new ticket
+
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket.Id);
+                await _historyService.AddHistoryAsync(oldTicket, newTicket, btUser.Id);
+
                 return RedirectToAction(nameof(Details), new { id = model.Ticket.Id });
             }
 
@@ -205,18 +224,30 @@ namespace TroubleTrails.Controllers
             if (ModelState.IsValid)
             {
 
-                ticket.Created = DateTimeOffset.Now;
-                ticket.OwnerUserId = btUser.Id;
+                try
+                {
+                    ticket.Created = DateTimeOffset.Now;
+                    ticket.OwnerUserId = btUser.Id;
 
-                ticket.TicketStatusId = (await _ticketService.LookupTicketStatusIdAsync(nameof(BTTicketStatus.New))).Value;
+                    ticket.TicketStatusId = (await _ticketService.LookupTicketStatusIdAsync(nameof(BTTicketStatus.New))).Value;
 
-                await _ticketService.AddNewTicketAsync(ticket);
+                    await _ticketService.AddNewTicketAsync(ticket);
 
-                //TODO: Add Ticket History
+                    //TODO: Add Ticket History
+                    Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                    await _historyService.AddHistoryAsync(null, newTicket, btUser.Id);
 
-                //TODO: Add Notification
+                    //TODO: Add Notification
 
-                return RedirectToAction(nameof(Index));
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }               
+                
+                return RedirectToAction(nameof(AllTickets));
             }
 
 
