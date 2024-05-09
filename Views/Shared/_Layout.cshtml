@@ -40,8 +40,10 @@
                                     <i class="fs-5 bi-file-earmark-ppt"></i><span class="ms-1 d-none d-sm-inline">Projects</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Create">New project...</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Index">Index</a></li>
+                                    @if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))  // if user is an admin or project manager show New Project
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Create">New project...</a></li>
+                                    }
                                     @if (!User.IsInRole(nameof(Roles.Admin)))  // if user is not an admin show My Projects
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="MyProjects">My Projects</a></li>
@@ -62,9 +64,8 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="Create">New ticket...</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="Index">Index</a></li>
 
-                                    @if (User.IsInRole(nameof(Roles.ProjectManager)))
+                                    @if (User.IsInRole(nameof(Roles.Admin)))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="MyTickets">My Tickets</a></li>
                                     }

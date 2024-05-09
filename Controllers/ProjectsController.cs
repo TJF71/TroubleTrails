@@ -12,28 +12,28 @@ using TroubleTrails.Extensions;
 using TroubleTrails.Models;
 using TroubleTrails.Models.Enums;
 using TroubleTrails.Models.ViewModels;
+using TroubleTrails.Services;
 using TroubleTrails.Services.Interfaces;
 
 namespace TroubleTrails.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+
         private readonly IBTRolesService _rolesService;
         private readonly IBTLookupService _lookupService;
         private readonly IBTFileService _fileService;
         private readonly IBTProjectService _projectService;
         private readonly IBTCompanyInfoService _companyInfoService;
         private readonly UserManager<BTUser> _userManager;
-        public ProjectsController(ApplicationDbContext context,
-                                    IBTRolesService rolesService,
+        public ProjectsController(  IBTRolesService rolesService,
                                     IBTLookupService lookupService,
                                     IBTFileService fileService,
                                     IBTProjectService projectService,
                                     IBTCompanyInfoService companyInfoService,
                                     UserManager<BTUser> userManager)
         {
-            _context = context;
+
             _rolesService = rolesService;
             _lookupService = lookupService;
             _fileService = fileService;
@@ -42,12 +42,6 @@ namespace TroubleTrails.Controllers
             _userManager = userManager;
         }
 
-        // GET: Projects
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.Projects.Include(p => p.Company).Include(p => p.ProjectPriority);
-            return View(await applicationDbContext.ToListAsync());
-        }
 
         public async Task<IActionResult> MyProjects()
         {
@@ -182,7 +176,8 @@ namespace TroubleTrails.Controllers
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Projects == null)
+            // if (id == null || _context.Projects == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -308,10 +303,18 @@ namespace TroubleTrails.Controllers
                     return RedirectToAction("Index");
 
                 }
-                catch (Exception)
+                catch (DbUpdateConcurrencyException)
                 {
+                    if (!await ProjectExists(model.Project.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
 
-                    throw;
+
                 }
 
             }
@@ -383,9 +386,12 @@ namespace TroubleTrails.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProjectExists(int id)
+        private async Task<bool> ProjectExists(int id)
         {
-            return (_context.Projects?.Any(e => e.Id == id)).GetValueOrDefault();
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            return (await _projectService.GetAllProjectsByCompanyAsync(companyId)).Any(p => p.Id == id);
+
         }
     }
 }
