@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Composition.Convention;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,6 +18,7 @@ using TroubleTrails.Services.Interfaces;
 
 namespace TroubleTrails.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
 
