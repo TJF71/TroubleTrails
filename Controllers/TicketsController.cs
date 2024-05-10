@@ -19,6 +19,8 @@ using TroubleTrails.Models.ViewModels;
 
 namespace TroubleTrails.Controllers
 {
+
+    [Authorize]
     public class TicketsController : Controller
     {
       
@@ -115,7 +117,7 @@ namespace TroubleTrails.Controllers
         }
 
 
-
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpGet]
         public async Task<IActionResult> AssignDeveloper(int id)
         {
@@ -128,7 +130,7 @@ namespace TroubleTrails.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignDeveloper(AssignDeveloperViewModel model)
@@ -260,6 +262,7 @@ namespace TroubleTrails.Controllers
             return View(ticket);
         }
 
+        
         // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -402,6 +405,7 @@ namespace TroubleTrails.Controllers
 
 
         // GET: Tickets/Archive/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Archive(int? id)
         {
             if (id == null)
@@ -421,6 +425,7 @@ namespace TroubleTrails.Controllers
         }
 
         // POST: Tickets/Archive/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost, ActionName("Archive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ArchiveConfirmed(int id)
@@ -434,6 +439,7 @@ namespace TroubleTrails.Controllers
 
 
         // GET: Tickets/Restore/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Restore(int? id)
         {
             if (id == null)
@@ -476,7 +482,7 @@ namespace TroubleTrails.Controllers
             return File(fileData, $"application/{ext}");
         }
 
-
+   
         private async Task<bool> TicketExists(int id)
         {
             int companyId = User.Identity.GetCompanyId().Value;

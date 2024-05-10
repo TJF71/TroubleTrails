@@ -65,7 +65,7 @@
                                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="Create">New ticket...</a></li>
 
-                                    @if (User.IsInRole(nameof(Roles.Admin)))
+                                    @if (User.IsInRole(nameof(Roles.ProjectManager))  || User.IsInRole(nameof(Roles.Developer)))
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="MyTickets">My Tickets</a></li>
                                     }
