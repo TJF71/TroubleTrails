@@ -114,7 +114,7 @@ namespace TroubleTrails.Services
                 }
 
                 //Check Ticket Type
-                if (oldTicket.TicketType != newTicket.TicketType)
+                if (oldTicket.TicketTypeId != newTicket.TicketTypeId)
                 {
                     TicketHistory history = new()
                     {
