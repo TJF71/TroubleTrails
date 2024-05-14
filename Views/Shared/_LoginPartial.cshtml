@@ -2,7 +2,7 @@
 @inject SignInManager<BTUser> SignInManager
 @inject UserManager<BTUser> UserManager
 @{
-    BTUser btUser = await UserManager.GetUserAsync(User);
+    BTUser? btUser = await UserManager.GetUserAsync(User);
 }
 
 <div class="dropdown py-sm-4 ms-auto ms-sm-0 flex-shrink-1">
