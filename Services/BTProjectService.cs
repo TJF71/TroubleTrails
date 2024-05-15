@@ -153,7 +153,7 @@ namespace TroubleTrails.Services
 
         }
 
-        public async Task<List<Project>> GetAllProjectsByPriority(int companyId, string priorityName)
+        public async Task<List<Project>> GetAllProjectsByPriorityAsync(int companyId, string priorityName)
         {
             List<Project> projects = await GetAllProjectsByCompanyAsync(companyId); // get all the projects by company id
             int priorityId = await LookupProjectPriorityId(priorityName); // get the priority id by the priority name
