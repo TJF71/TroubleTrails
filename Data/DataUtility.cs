@@ -158,8 +158,12 @@ namespace TroubleTrails.Data
                          CompanyId = company1Id,
                          Name = "Build a Personal Porfolio",
                          Description="Single page html, css & javascript page.  Serves as a landing page for candidates and contains a bio and links to all applications and challenges." ,
-                         StartDate = new DateTime(2021,8,20), 
-                         EndDate = new DateTime(2021,8,20).AddMonths(1),
+                         //StartDate = new DateTime(2021,8,20), 
+                         //EndDate = new DateTime(2021,8,20).AddMonths(1),
+
+                         StartDate = new DateTime(2024,5,20),
+                         EndDate = new DateTime(2024,8,20).AddMonths(1),
+
                          ProjectPriorityId = priorityLow
                      },
                      new Project()
