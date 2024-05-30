@@ -434,7 +434,9 @@ namespace TroubleTrails.Controllers
             ticket.Archived = true;
             await _ticketService.UpdateTicketAsync(ticket);
 
-            return RedirectToAction(nameof(Index));
+            //return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllTickets));
+
         }
 
 
@@ -467,7 +469,8 @@ namespace TroubleTrails.Controllers
             ticket.Archived = false;  // restore by setting archived to false
             await _ticketService.UpdateTicketAsync(ticket);
 
-            return RedirectToAction(nameof(Index));
+            //return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllTickets));
         }
 
 
