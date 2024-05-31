@@ -161,8 +161,8 @@ namespace TroubleTrails.Data
                          //StartDate = new DateTime(2021,8,20), 
                          //EndDate = new DateTime(2021,8,20).AddMonths(1),
 
-                         StartDate = new DateTime(2024,5,20),
-                         EndDate = new DateTime(2024,5,20).AddMonths(4),
+                         StartDate = new DateTime(2024,4,20).ToUniversalTime(),
+                         EndDate = new DateTime(2024,4,20).AddMonths(6).ToUniversalTime(),
 
                          ProjectPriorityId = priorityLow
                      },
