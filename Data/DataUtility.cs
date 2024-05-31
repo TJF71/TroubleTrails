@@ -141,6 +141,8 @@ namespace TroubleTrails.Data
             }
         }
 
+
+        #region SeedDefaultProjects
         public static async Task SeedDefautProjectsAsync(ApplicationDbContext context)
         {
 
@@ -217,7 +219,7 @@ namespace TroubleTrails.Data
                 throw;
             }
         }
-
+        #endregion seedDefaultProjects
 
 
         public static async Task SeedDefaultUsersAsync(UserManager<BTUser> userManager)
